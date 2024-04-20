@@ -1,0 +1,23 @@
+version: "3.8"
+services:
+  dev-environment:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./backend:/app/backend
+      - /app/frontend/node_modules
+      - /app/backend/node_modules
+    environment:
+      - EXPRESS_ENV=development
+      - PORT=5000
+      - SESSION_SECRET=${SESSION_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+      - BCRYPT_SALT_ROUNDS=${BCRYPT_SALT_ROUNDS}
+      - REDIS_URL=${REDIS_URL}
+    env_file:
+      - .env
+    entrypoint: "/entrypoint.sh"

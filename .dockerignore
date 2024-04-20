@@ -1,0 +1,48 @@
+# Dependency directories
+**/node_modules
+
+# Build outputs
+**/dist
+**/build
+/frontend/.next
+/backend/dist
+
+# Source control directories
+**/.git
+**/.gitignore
+
+# Environment files
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Editor directories and files
+.idea
+.vscode
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# Logs
+**/*.log
+**/logs
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+**/tmp
+**/temp
+
+# Docker specific
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# READMEs and other markdown files, if not needed in the image
+**/*.md
+
+
+# Other common directories to ignore
+__MACOSX/
