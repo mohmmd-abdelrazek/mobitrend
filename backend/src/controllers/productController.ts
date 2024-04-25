@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/ProductModel";
+import cloudinary from "../config/cloudinaryConfig";
 
 // Get all products with pagination
 export const getAllProducts = async (req: Request, res: Response) => {
@@ -17,10 +18,10 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
     res.status(200).json({
       status: "success",
-      count: products.length,
       page,
       totalPages: Math.ceil(total / limit),
-      data: products,
+      products: products,
+      productsCount: total,
     });
   } catch (error) {
     res.status(500).json(error);
@@ -36,7 +37,7 @@ export const getProductById = async (req: Request, res: Response) => {
     }
     res.status(200).json(product);
   } catch (error) {
-    res.status(500).json({message: "An unexpected error occurred", error})
+    res.status(500).json({ message: "An unexpected error occurred", error });
   }
 };
 
@@ -47,7 +48,7 @@ export const createProduct = async (req: Request, res: Response) => {
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
-    res.status(500).json({message: "An unexpected error occurred", error})
+    res.status(500).json({ message: "An unexpected error occurred", error });
   }
 };
 
@@ -81,7 +82,6 @@ export const deleteProduct = async (req: Request, res: Response) => {
   }
 };
 
-// Handle product stock (could be for an update stock endpoint)
 export const updateStock = async (req: Request, res: Response) => {
   try {
     const { id, stock } = req.body;
@@ -96,5 +96,43 @@ export const updateStock = async (req: Request, res: Response) => {
     res.status(200).json(product);
   } catch (error) {
     res.status(400).json(error);
+  }
+};
+
+export const getProductImages = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const result = await cloudinary.search
+      .expression(`folder:products/${id}`)
+      .sort_by("created_at", "desc")
+      .max_results(30)
+      .execute();
+    const images = result.resources.map(
+      (resource: { secure_url: unknown }) => resource.secure_url
+    );
+    res.json(images);
+  } catch (error) {
+    console.error("Failed to fetch images:", error);
+    res.status(500).json({ message: "Failed to fetch images" });
+  }
+};
+
+export const uploadImages = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const uploader = async (file: Express.Multer.File) =>
+      await cloudinary.uploader.upload(file.path, {
+        folder: `products/${id}`, // Store images in a specific folder per product
+      });
+    const urls = await Promise.all(
+      (req.files as Express.Multer.File[]).map((file) => uploader(file))
+    );
+    res.status(200).json({
+      message: "Images uploaded successfully",
+      data: urls.map((url) => url.secure_url),
+    });
+  } catch (error) {
+    console.error("Failed to upload images:", error);
+    res.status(500).json({ message: "Failed to upload images" });
   }
 };

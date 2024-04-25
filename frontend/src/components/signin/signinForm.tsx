@@ -6,12 +6,16 @@ import useRedirectIfAuthenticated from "@/src/hooks/useRedirectIfAuthenticated";
 import { SigninTextProps } from "@/src/types/textProps";
 import { Link } from "@/src/navigation";
 import InputField from "../InputField";
+import { useRouter } from "@/src/navigation";
+import toast from "react-hot-toast";
+import { mutate } from "swr";
 
 const SigninForm = (texts: SigninTextProps) => {
   useRedirectIfAuthenticated("/");
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -26,7 +30,9 @@ const SigninForm = (texts: SigninTextProps) => {
     try {
       const response = await axiosInstance.post("/auth/login", credentials);
       setIsLoading(false);
-      window.location.href = "/";
+      mutate("/auth/status")
+      router.push("/");
+      toast.success("logged in successfully")
     } catch (error) {
       setIsLoading(false);
       if (isAxiosError(error)) {
@@ -44,15 +50,15 @@ const SigninForm = (texts: SigninTextProps) => {
       onSubmit={handleSubmit}
     >
       <InputField
-          id="email"
-          name="email"
-          type="email"
-          value={credentials.email}
-          onChange={handleChange}
-          isLoading={isLoading}
-          label={texts.email}
-          placeholder={texts.emailPlaceholder}
-        />
+        id="email"
+        name="email"
+        type="email"
+        value={credentials.email}
+        onChange={handleChange}
+        isLoading={isLoading}
+        label={texts.email}
+        placeholder={texts.emailPlaceholder}
+      />
       <div>
         <InputField
           id="password"

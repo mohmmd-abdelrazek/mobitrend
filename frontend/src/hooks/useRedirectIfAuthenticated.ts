@@ -6,15 +6,16 @@ import { useAuth } from "../services/queries";
 const useRedirectIfAuthenticated = (redirectUrl: string): void => {
   const router = useRouter();
   const {data, isLoading} = useAuth();
+  
 
   useEffect(() => {
     
-        if (data?.isAuthenticated) {
+        if (data?.isAuthenticated && !isLoading) {
           router.push(redirectUrl);
         }
       
       },
-    [router, redirectUrl, data]);
+    [router, redirectUrl, data, isLoading]);
     
 };
 

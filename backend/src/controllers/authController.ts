@@ -92,6 +92,7 @@ export const signup = async (req: Request, res: Response) => {
 
   res.status(201).json({
     message: "Signup successful",
+    success: true,
     user: {
       id: newUser._id,
       name: newUser.name,
@@ -102,7 +103,7 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = (req: Request, res: Response) => {
   if (req.user) {
-    res.status(200).json({ message: "Login successful", user: req.user });
+    res.status(200).json({ message: "Login successful",success:true, user: req.user });
   } else {
     res.status(401).json({ error: "Login failed" });
   }
@@ -117,7 +118,7 @@ export const logout = (req: Request, res: Response) => {
 export const status = (req: Request, res: Response) => {
   res
     .status(200)
-    .json({ isAuthenticated: req.isAuthenticated(), user: req.user });
+    .json({ isAuthenticated: req.isAuthenticated(), isAdmin: req.isAuthenticated() && req.user?.role === "admin" });
 };
 
 export const googleCallback = passport.authenticate("google");

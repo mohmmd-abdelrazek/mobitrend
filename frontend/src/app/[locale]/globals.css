@@ -7,82 +7,92 @@
     box-sizing: border-box;
   }
   h1 {
-    @apply my-6 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white;
+    @apply font-extrabold my-4 text-lg leading-none tracking-tight text-gray-700 md:text-xl lg:text-2xl dark:text-white;
   }
   h2 {
-    @apply text-2xl font-extrabold leading-none tracking-tight text-gray-700 md:text-3xl lg:text-4xl dark:text-white;
+    @apply my-3 text-base font-bold leading-none tracking-tight text-gray-800 md:text-lg lg:text-xl dark:text-white;
   }
+
   .dynamic-grid {
     display: grid;
     grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 
-.responsive-container {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  
-  /* Responsive padding */
-  @media (min-width: 640px) { /* sm */
-    padding-left: 2rem;
-    padding-right: 2rem;
+  .small-dynamic-grid {
+    display: grid;
+    grid-gap: 0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 100px));
   }
 
-  @media (min-width: 768px) { /* md */
-    padding-left: 4rem;
-    padding-right: 4rem;
+  .responsive-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    /* Responsive padding */
+    @media (min-width: 640px) {
+      /* sm */
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      /* md */
+      padding-left: 4rem;
+      padding-right: 4rem;
+    }
+
+    @media (min-width: 1024px) {
+      /* lg */
+      padding-left: 6rem;
+      padding-right: 6rem;
+    }
+
+    @media (min-width: 1280px) {
+      /* xl */
+      padding-left: 8rem;
+      padding-right: 8rem;
+    }
   }
 
-  @media (min-width: 1024px) { /* lg */
-    padding-left: 6rem;
-    padding-right: 6rem;
+  /* For WebKit browsers */
+  .team-list::-webkit-scrollbar {
+    width: 0; /* Hide scrollbar by default */
+    background: transparent; /* Optional: Just to ensure scrollbar is fully transparent */
   }
 
-  @media (min-width: 1280px) { /* xl */
-    padding-left: 8rem;
-    padding-right: 8rem;
+  .team-list:hover::-webkit-scrollbar {
+    width: 8px; /* Show scrollbar on hover */
   }
-}
 
-/* For WebKit browsers */
-.team-list::-webkit-scrollbar {
-  width: 0; /* Hide scrollbar by default */
-  background: transparent; /* Optional: Just to ensure scrollbar is fully transparent */
-}
+  .team-list::-webkit-scrollbar-track {
+    background: transparent; /* Track background */
+  }
 
-.team-list:hover::-webkit-scrollbar {
-  width: 8px; /* Show scrollbar on hover */
-}
+  .team-list:hover::-webkit-scrollbar-track {
+    background: #2a2a2a; /* Track background on hover */
+  }
 
-.team-list::-webkit-scrollbar-track {
-  background: transparent; /* Track background */
-}
+  .team-list::-webkit-scrollbar-thumb {
+    background: transparent; /* Scrollbar color */
+  }
 
-.team-list:hover::-webkit-scrollbar-track {
-  background: #2a2a2a; /* Track background on hover */
-}
+  .team-list:hover::-webkit-scrollbar-thumb {
+    background: #4a4a4a; /* Scrollbar color on hover */
+    border-radius: 4px; /* Rounded corners for scrollbar */
+  }
 
-.team-list::-webkit-scrollbar-thumb {
-  background: transparent; /* Scrollbar color */
-}
+  .team-list:hover::-webkit-scrollbar-thumb:hover {
+    background: #5a5a5a; /* Scrollbar color when hovering over the scrollbar itself */
+  }
 
-.team-list:hover::-webkit-scrollbar-thumb {
-  background: #4a4a4a; /* Scrollbar color on hover */
-  border-radius: 4px; /* Rounded corners for scrollbar */
-}
+  /* For Firefox */
+  .team-list {
+    scrollbar-width: none; /* Hide scrollbar by default */
+  }
 
-.team-list:hover::-webkit-scrollbar-thumb:hover {
-  background: #5a5a5a; /* Scrollbar color when hovering over the scrollbar itself */
-}
-
-/* For Firefox */
-.team-list {
-  scrollbar-width: none; /* Hide scrollbar by default */
-}
-
-.team-list:hover {
-  scrollbar-width: thin; /* 'auto' or 'thin' */
-  scrollbar-color: #4a4a4a #2a2a2a; /* Thumb and track color on hover */
-}
-
+  .team-list:hover {
+    scrollbar-width: thin; /* 'auto' or 'thin' */
+    scrollbar-color: #4a4a4a #2a2a2a; /* Thumb and track color on hover */
+  }
 }

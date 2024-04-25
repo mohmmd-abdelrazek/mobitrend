@@ -28,7 +28,7 @@ router.post("/login", (req, res, next) => {
         }
         return res
           .status(200)
-          .json({ success: true, message: "Login successful", user });
+          .json({ success: true, message: "Login successful" });
       });
     }
   )(req, res, next);

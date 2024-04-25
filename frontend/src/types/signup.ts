@@ -17,16 +17,23 @@
     isSignupEnabled: boolean;
   }
 
-  export interface InputFieldProps {
+  interface Option {
+    value: string;
+    label: string;
+}
+
+export interface InputFieldProps {
     id: string;
     name: string;
     type: string;
-    value: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    isLoading: boolean;
+    value: string | number;
+    onChange: (e: any) => void;
+    isLoading?: boolean;
     label: string;
     placeholder?: string;
-  }
+    options?: Option[]; // Optional, only for select input type
+    textarea?: boolean; // Optional, if the input should render as a textarea
+}
 
   export interface SendCodeButtonProps {
     onClick: () => void;

@@ -7,7 +7,7 @@ import {
   useEffect,
   useContext,
 } from "react";
-import { User } from "../types/user";
+import { User } from "../types/types";
 import { axiosInstance } from "../services/fetcher";
 
 interface AuthContextType {

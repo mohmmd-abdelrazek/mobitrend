@@ -9,6 +9,7 @@ import { SignupTextProps } from "@/src/types/textProps";
 import Image from "next/image";
 import signinIcon from "@/src/assest/signin.gif";
 import toast from "react-hot-toast";
+import { mutate } from "swr";
 
 const SignupForm = (texts: SignupTextProps) => {
   const [formData, setFormData] = useState({
@@ -87,21 +88,57 @@ const SignupForm = (texts: SignupTextProps) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
-    setIsLoading(true);
+    if (!validateForm()) return; // Ensure this function validates all necessary fields effectively
+
+    setIsLoading(true); // Assuming there is a state setter for loading state
+
     try {
+      // Post the signup form data
       const response = await axiosInstance.post("/auth/signup", formData);
-      const logout = await axiosInstance.get("/auth/logout");
-      setIsLoading(false);
-      setSuccessMessage("Signup successful!");
-      setErrors([]);
-      toast.success("Congratulations! you have signed up successfully");
-      router.push("/signin");
-    } catch (error) {
-      setIsLoading(false);
-      if (isAxiosError(error)) {
-        setErrors([error.response?.data?.error || texts.errorMessage]);
+
+      // Handle the response from the signup
+      if (response.data.success) {
+        setSuccessMessage("Signup successful!");
+        setErrors([]);
+        toast.success("Congratulations! You have signed up successfully.");
+
+        // Attempt to log in the user automatically
+        const signinResponse = await axiosInstance.post("/auth/login", {
+          email: formData.email,
+          password: formData.password,
+        });
+
+        if (signinResponse.data.success) {
+          mutate("/auth/status");
+          router.push("/")
+          toast.success("signed in successfully");
+        } else {
+          // Handle case where login fails
+          toast.error("Automatic login failed. Please try to log in manually.");
+          setErrors([signinResponse.data.message || "Automatic login failed."]);
+        }
+      } else {
+        // Handle unsuccessful signup
+        toast.error(response.data.message || "Signup failed.");
+        setErrors([response.data.message || "Signup failed."]);
       }
+    } catch (error) {
+      // Generic error handling
+      if (isAxiosError(error) && error.response) {
+        setErrors([
+          error.response.data.error ||
+            "An error occurred during the signup process.",
+        ]);
+        toast.error(
+          error.response.data.error ||
+            "An error occurred during the signup process.",
+        );
+      } else {
+        setErrors(["An unexpected error occurred. Please try again."]);
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setIsLoading(false); // Ensure loading state is cleared
     }
   };
 

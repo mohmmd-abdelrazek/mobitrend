@@ -1,26 +1,17 @@
-import { useTranslations } from "next-intl";
-import { HomeTextProps } from "@/src/types/textProps";
-import HomeClient from "@/src/components/home/HomeClient";
+import PromotionBanner from "@/src/components/home/PromotionBanner";
+import Carousel from "@/src/components/home/Carousel";
+import CategoryList from "@/src/components/home/CategoryList";
 
 const LandingPage = () => {
-  const t = useTranslations("Index");
+  const featuredProducts = ["https://placehold.co/400", "https://placehold.co/400", "https://placehold.co/400"]; // Add your product image URLs here
+  const categories = [{ id: 1, name: "Smartphones", imageUrl: "https://placehold.co/400" }];
   
-  const texts: HomeTextProps = {
-    homeGreeting: t("homeGreeting"),
-    createPage: t("createPage"),
-    myPages: t("myPages"),
-    join: t("join"),
-    league: t("league"),
-    signIn: t("signIn"),
-    signUp: t("signUp"),
-    startCreating: t("startCreating"),
-    signInToCreate: t("signInToCreate"),
-    easyManage: t("easyManage"),
-  };
-  
+
   return (
-    <div className="w-full flex-1 flex justify-center items-center responsive-container">
-      <HomeClient  {...texts}/>
+    <div>
+      <PromotionBanner />
+      <Carousel />
+      <CategoryList categories={categories} />
     </div>
   );
 };

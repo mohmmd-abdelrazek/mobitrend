@@ -25,7 +25,7 @@ function Signin() {
         <h2 className="text-center text-xl font-semibold text-gray-800 sm:text-2xl">
           {texts.signIn}
         </h2>
-        <div className="mx-auto h-20 w-20 rounded-full">
+        <div className="mx-auto h-16 w-16 rounded-full">
           <Image
             className="rounded-full"
             src={signinIcon}
