@@ -1,6 +1,6 @@
 const Profile = () => {
   return (
-    <div>Profile</div>
+    <div className="flex-1">Profile</div>
   )
 }
 

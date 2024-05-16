@@ -1,8 +1,8 @@
-import useSWR from "swr";
+import useSWRImmutable from "swr/immutable";
 import { Order, Product, Review, User } from "../types/types";
 import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-// Helper function to extract numerical IDs from paths or slugs
 const extractId = (pathSlug: string | string[] | undefined): number | null => {
   if (typeof pathSlug !== "string") return null;
   const possibleId = pathSlug.split("-").pop();
@@ -11,43 +11,51 @@ const extractId = (pathSlug: string | string[] | undefined): number | null => {
 };
 
 export function useAuth() {
-  return useSWR("/auth/status");
+  return useSWRImmutable("/auth/status");
 }
 
-export function useProducts(page: number) {
-  return useSWR(`/product?page=${page}`);
+export function useProducts() {
+  const searchParams = useSearchParams();
+  return useSWRImmutable(`/product?${searchParams}`);
 }
 
 export function useProduct() {
   const { productId } = useParams();
-  return useSWR(productId ? `/product/${productId}` : null);
+  return useSWRImmutable(productId ? `/product/${productId}` : null);
 }
 
 export function useProductImages() {
   const { productId } = useParams();
-  return useSWR(productId ? `/product/${productId}/images` : null);
+  return useSWRImmutable(productId ? `/product/${productId}/images` : null);
+}
+
+export function useProductImage(productId: number) {
+  return useSWRImmutable(productId ? `/product/${productId}/images` : null);
 }
 
 export function useUsers() {
-  return useSWR<User[]>("/user");
+  return useSWRImmutable<User[]>("/user");
 }
 
 export function useUser() {
-  return useSWR<User>("/user/profile");
+  return useSWRImmutable<User>("/user/profile");
 }
 
 export function useReviews() {
   const { productId } = useParams();
-  return useSWR<Review[]>(
-    productId ? `/product/${productId}/reviews` : null,
+  return useSWRImmutable<Review[]>(
+    productId ? `/review/${productId}` : null,
   );
 }
 
+export function useCart() {
+  return useSWRImmutable("/cart");
+}
 export function useOrders() {
-  return useSWR<Order[]>("/order");
+  return useSWRImmutable<Order[]>("/order");
 }
 
 export function useOrder() {
   const { orderId } = useParams();
-  return useSWR<Order>(orderId ? `/order/${orderId}` : null);
+  return useSWRImmutable<Order>(orderId ? `/order/${orderId}` : null);
 }

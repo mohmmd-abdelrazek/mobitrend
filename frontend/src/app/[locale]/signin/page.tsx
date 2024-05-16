@@ -1,7 +1,7 @@
 import SigninForm from "@/src/components/signin/signinForm";
 import { SigninTextProps } from "@/src/types/textProps";
 import { useTranslations } from "next-intl";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import signinIcon from "@/src/assest/signin.gif";
 import { Link } from "@/src/navigation";
 

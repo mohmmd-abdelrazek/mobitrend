@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 interface CategoryProps {
   categories: { id: number; name: string; imageUrl: string }[];

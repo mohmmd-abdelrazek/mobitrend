@@ -6,7 +6,7 @@ import { useRouter } from "@/src/navigation";
 import { axiosInstance } from "@/src/services/fetcher";
 import { isAxiosError } from "axios";
 import { SignupTextProps } from "@/src/types/textProps";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import signinIcon from "@/src/assest/signin.gif";
 import toast from "react-hot-toast";
 import { mutate } from "swr";

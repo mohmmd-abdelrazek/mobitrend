@@ -1,27 +1,29 @@
 "use client";
-import axios from "axios";
 import { useRef, useState } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { toast } from "react-hot-toast";
 import { useParams } from "next/navigation";
 import { useProductImages } from "@/src/services/queries";
-import { mutate } from "swr";
-import { axiosInstance } from "@/src/services/fetcher";
+
+import { deleteImage, uploadImages } from "@/src/services/mutate";
+import { TicketX } from "lucide-react";
 
 const UploadImages = () => {
   const { productId } = useParams();
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
-  const { data: images, isLoading, error } = useProductImages();
+  const { data, isLoading, error, mutate } = useProductImages();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Failed to load products.</p>;
 
+  const images = data.images;
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFiles(Array.from(e.target.files));
     }
+    console.log(fileInputRef?.current?.value);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -31,12 +33,8 @@ const UploadImages = () => {
       files.forEach((file) => formData.append("images", file));
       try {
         setUploading(true);
-        const response = await axiosInstance.post(
-          `/product/${productId}/upload-images`,
-          formData,
-        );
-        mutate(`/products/${productId}/upload-images`); 
-        toast.success("Images uploaded successfully!");
+        await uploadImages(productId, formData);
+        mutate();
         setFiles([]);
         fileInputRef.current && (fileInputRef.current.value = "");
       } catch (error) {
@@ -50,8 +48,8 @@ const UploadImages = () => {
 
   return (
     <div className="w-full px-4 py-6 shadow-lg">
-      <h1 className="mb-4 text-2xl font-bold">Upload Images for Product</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <h1 className="mb-4 text-2xl font-bold">{`Upload Images for Product #${productId}`}</h1>
+      <form onSubmit={handleSubmit}>
         <input
           type="file"
           ref={fileInputRef}
@@ -60,19 +58,22 @@ const UploadImages = () => {
           onChange={handleFileChange}
           className="block w-full cursor-pointer text-sm text-gray-500 file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-violet-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-violet-700 hover:file:bg-violet-100"
         />
-        {files.length > 0 && (
-          <div className="small-dynamic-grid mt-4">
+        {files.length > 0 ? (
+          <div className="small-dynamic-grid my-4">
             {Array.from(files).map((file, index) => (
-              <div key={index} className="relative h-20 w-full">
-                <Image
-                  src={URL.createObjectURL(file)}
-                  alt="Preview"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-md"
-                />
-              </div>
+                <div key={index} className="relative aspect-square w-full">
+                  <Image
+                    src={URL.createObjectURL(file)}
+                    alt="Preview"
+                    layout="fill"
+                    className="h-full w-full rounded-t-md object-cover object-center"
+                  />
+                </div>
             ))}
+          </div>
+        ) : (
+          <div className="my-4">
+            No images choosen, choose images to be uploaded.
           </div>
         )}
 
@@ -84,20 +85,33 @@ const UploadImages = () => {
           {uploading ? "Uploading..." : "Upload"}
         </button>
 
-        {images.length > 0 && (
-          <div className="small-dynamic-grid mt-4">
+        {images.length > 0 ? (
+          <div className="small-dynamic-grid mt-10">
             {images.map((image: string, index: number) => (
-              <div key={index} className="relative h-20 w-full">
-                <Image
-                  src={image}
-                  alt="Preview"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-md"
-                />
+              <div key={index} className="relative group overflow-hidden">
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src={image}
+                    alt="Preview"
+                    layout="fill"
+                    className="h-full w-full rounded-t-md object-cover object-center"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await deleteImage(image);
+                    mutate();
+                  }}
+                  className="text-xm transition-all z-1 absolute -bottom-full group-hover:bottom-0 flex w-full justify-center bg-red-500 font-semibold text-white"
+                >
+                  <TicketX />
+                </button>
               </div>
             ))}
           </div>
+        ) : (
+          <div className="mt-12">No images uploaded for this product.</div>
         )}
       </form>
     </div>

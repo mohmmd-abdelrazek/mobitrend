@@ -1,19 +1,50 @@
+"use client";
+
+import { useProducts } from "@/src/services/queries";
+import { useSearchParams } from "next/navigation";
+import FilterSide from "@/src/components/FilterSide";
+import Pagination from "@/src/components/Pagination";
+import Products from "@/src/components/Products";
 import PromotionBanner from "@/src/components/home/PromotionBanner";
-import Carousel from "@/src/components/home/Carousel";
-import CategoryList from "@/src/components/home/CategoryList";
+import Sort from "@/src/components/Sort";
 
-const LandingPage = () => {
-  const featuredProducts = ["https://placehold.co/400", "https://placehold.co/400", "https://placehold.co/400"]; // Add your product image URLs here
-  const categories = [{ id: 1, name: "Smartphones", imageUrl: "https://placehold.co/400" }];
+
+const HomePage = () => {
+  const searchParams = useSearchParams();
   
+  const keyword = searchParams.get("keyword");
+  
+  const { data } = useProducts();
 
+  
   return (
-    <div>
-      <PromotionBanner />
-      <Carousel />
-      <CategoryList categories={categories} />
+    <div className="responsive-container flex flex-1 flex-col gap-2">
+      {!keyword && <PromotionBanner />}
+      <div className="flex flex-1 w-full gap-8">
+        {keyword && (
+          <div>
+            <FilterSide />
+          </div>
+        )}
+        <div className="flex-1 flex flex-col">
+          <div className="flex justify-between border-b border-gray-300">
+            <h1 className="text-xl font-bold">
+              {keyword
+                ? `${data?.productsCount} products match keyword: ${keyword}`
+                : "Latest Products"}
+            </h1>
+            {keyword && (
+              <Sort />
+            )}
+          </div>
+          <Products />
+        </div>
+      </div>
+      {!keyword && (
+        <Pagination />
+      )}
     </div>
   );
 };
 
-export default LandingPage;
+export default HomePage;

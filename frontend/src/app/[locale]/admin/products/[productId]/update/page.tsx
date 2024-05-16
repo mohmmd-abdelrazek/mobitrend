@@ -1,17 +1,18 @@
 "use client";
 import { useState } from "react";
-import useSWR from "swr";
 import InputField from "@/src/components/InputField";
 import toast from "react-hot-toast";
 import { useRouter } from "@/src/navigation";
 import { useParams } from "next/navigation";
 import { useProduct } from "@/src/services/queries";
 import { updateProduct } from "@/src/services/mutate";
+import { mutate } from "swr";
+
 
 const UpdateProductForm = () => {
   const router = useRouter();
   const { productId } = useParams();
-  const { data: productData, isLoading, error, mutate } = useProduct();
+  const { data: productData, isLoading, error, mutate: mutateProduct } = useProduct();
   const [isUpdating, setIsUpdating] = useState(false);
 
   if (isLoading) return <p>Loading...</p>;
@@ -24,7 +25,7 @@ const UpdateProductForm = () => {
     >,
   ) => {
     const { name, value } = event.target;
-    mutate({ ...productData, [name]: value }, false); // Optimistic UI update
+    mutateProduct({ ...productData, [name]: value }, false); // Optimistic UI update
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,10 +37,9 @@ const UpdateProductForm = () => {
         price: parseFloat(productData.price),
         inStock: parseInt(productData.inStock),
       };
-      // Update product details using PUT request
       updateProduct(productId, updatedData);
       toast.success("Product updated successfully");
-      mutate();
+      mutate("/product")
       router.push("/admin/products")
     } catch (error) {
       console.error("Error updating product:", error);

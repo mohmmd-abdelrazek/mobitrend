@@ -23,6 +23,10 @@ export const addItemToCart = async (req: Request, res: Response) => {
     }
 
     const itemIndex = findCartItemIndex(cart.cartItems, productId);
+    const image =
+      product.images.length > 0
+        ? product.images[0]
+        : "https://res.cloudinary.com/dhliba9i5/image/upload/v1714169979/products/default-placeholder_r9thjf.png";
 
     if (itemIndex > -1) {
       cart.cartItems[itemIndex].qty += qty;
@@ -30,18 +34,18 @@ export const addItemToCart = async (req: Request, res: Response) => {
       cart.cartItems.push({
         product: product._id,
         name: product.name,
-        image: product.images[0],
+        image: image,
         price: product.price,
         countInStock: product.inStock,
         qty,
       });
     }
-
     cart.calculateTotal();
     await cart.save();
     res.status(201).json(cart);
   } catch (error) {
     res.status(500).json({ message: "Error adding item to cart", error });
+    console.log("error", error);
   }
 };
 

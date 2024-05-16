@@ -3,9 +3,13 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  imageUrl: string[];
   category: string;
+  images: string[];
+  brand: string;
   inStock: number;
+  rating: number;
+  numReviews: number;
+  discount: number;
   variants: ProductVariant[];
   createdAt?: string;
   updatedAt?: string;
@@ -23,7 +27,7 @@ export interface User {
   name: string;
   email: string;
   password?: string; // Exclude from responses, only for forms
-  role: 'admin' | 'customer';
+  role: "admin" | "customer";
   createdAt?: string;
   updatedAt?: string;
 }
@@ -32,6 +36,7 @@ export interface Review {
   id: number;
   userId: number;
   productId: number;
+  name: string;
   rating: number;
   comment: string;
   createdAt?: string;
@@ -44,7 +49,7 @@ export interface Order {
   products: OrderProduct[];
   paymentDetails: PaymentDetails;
   shippingDetails: ShippingDetails;
-  status: 'pending' | 'completed' | 'cancelled';
+  status: "pending" | "completed" | "cancelled";
   totalAmount: number;
   createdAt?: string;
   updatedAt?: string;
@@ -58,8 +63,8 @@ export interface OrderProduct {
 }
 
 export interface PaymentDetails {
-  method: 'credit_card' | 'paypal' | 'stripe';
-  status: 'paid' | 'unpaid';
+  method: "credit_card" | "paypal" | "stripe";
+  status: "paid" | "unpaid";
 }
 
 export interface ShippingDetails {
@@ -67,7 +72,7 @@ export interface ShippingDetails {
   city: string;
   postalCode: string;
   country: string;
-  method: 'standard' | 'express';
+  method: "standard" | "express";
 }
 
 // Types for API responses

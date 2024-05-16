@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useProducts } from "@/src/services/queries";
 import { Product } from "@/src/types/types";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 const Carousel = () => {
   const [currentPage, setCurrentPage] = useState(1);

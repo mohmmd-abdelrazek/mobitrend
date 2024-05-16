@@ -23,7 +23,7 @@ interface Dataset {
 
 const DashboardPage = () => {
   const [dates, setDates] = useState<DateRange>({
-    startDate: new Date(new Date().setMonth(new Date().getMonth() - 11)),
+    startDate: new Date(new Date().setMonth(new Date().getMonth() - 3)),
     endDate: new Date(),
   });
 
@@ -85,7 +85,7 @@ const DashboardPage = () => {
   }, [calculateChartData]); 
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col w-full gap-12">
       <DateFilter onDateChange={setDates} />
       <div className="grid grid-cols-2 gap-4">
         <DashboardCard

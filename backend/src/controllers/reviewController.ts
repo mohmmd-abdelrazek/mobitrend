@@ -4,7 +4,8 @@ import ProductModel from "../models/ProductModel";
 
 // Create a review
 export const addReview = async (req: Request, res: Response) => {
-  const { productId, rating, comment } = req.body;
+  const {productId} = req.params;
+  const { rating, comment } = req.body;
   const user = req.user; // Assuming user is added to req by authentication middleware
 
   try {

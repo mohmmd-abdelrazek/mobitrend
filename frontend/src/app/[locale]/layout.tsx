@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/src/app/globals.css";
 import Header from "@/src/components/header/Header";
 import Footer from "@/src/components/Footer";
 import { Toaster } from "react-hot-toast";

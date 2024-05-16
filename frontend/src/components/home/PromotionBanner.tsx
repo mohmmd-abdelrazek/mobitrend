@@ -1,7 +1,7 @@
-const PromotionBanner: React.FC = () => {
+const PromotionBanner = () => {
   return (
-    <div className="text-blue-500 p-4 text-center">
-      <h2 className="text-2xl">Seasonal Sale is on! Up to 50% off!</h2>
+    <div className="text-blue-500 text-center">
+      <h2>Seasonal Sale is on! Up to 50% off!</h2>
     </div>
   );
 };

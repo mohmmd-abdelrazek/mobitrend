@@ -2,7 +2,7 @@ import express from "express";
 import * as productController from "../controllers/productController";
 import { isAuthenticated } from "../middleware/middleware";
 import multer from "multer";
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
@@ -18,6 +18,12 @@ router.delete("/:id", isAuthenticated, productController.deleteProduct);
 
 router.get("/:id/images", productController.getProductImages);
 
-router.post("/:id/upload-images", upload.array("images"), productController.uploadImages)
+router.delete("/images/:imageUrl", productController.deleteProductImage);
+
+router.post(
+  "/:id/upload-images",
+  upload.array("images"),
+  productController.uploadImages
+);
 
 export default router;

@@ -1,21 +1,26 @@
 "use client";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useProducts } from "@/src/services/queries";
 import { FaEdit, FaUpload, FaTrashAlt } from "react-icons/fa";
 import { Product } from "@/src/types/types";
 import clsx from "clsx";
 import { deleteProduct } from "@/src/services/mutate";
+import { Link, usePathname, useRouter } from "@/src/navigation";
+import { useSearchParams } from "next/navigation";
+import Pagination from "@/src/components/Pagination";
 import { mutate } from "swr";
-import { Link } from "@/src/navigation";
 
 const AdminProductsPage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, error } = useProducts(currentPage);
+  const { data, isLoading, error, mutate: mutateProducts } = useProducts();
+  const searchParams = useSearchParams()
+  const pathname = usePathname();
+  const router = useRouter();
+  const limit = searchParams.get("limit");
 
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Failed to load products.</p>;
-  const products = data.products;
-  if (!products.length) return <p>No products found.</p>;
+  const products = data?.products;
+  if (!products?.length) return <p>No products found.</p>;
 
   return (
     <div className="flex w-full flex-col">
@@ -63,7 +68,10 @@ const AdminProductsPage = () => {
                     <FaUpload />
                   </Link>
                   <button
-                    onClick={() => deleteProduct(product._id, currentPage)}
+                    onClick={async () => {
+                      await deleteProduct(product._id);
+                      mutateProducts();
+                    }}
                     className="rounded-md border-2 border-red-500 p-1 text-red-500 hover:bg-red-500 hover:text-white"
                   >
                     <FaTrashAlt />
@@ -74,23 +82,7 @@ const AdminProductsPage = () => {
           </tbody>
         </table>
       </div>
-      {/* Pagination Controls */}
-      <div className="my-4 flex justify-center space-x-2">
-        <button
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage <= 1}
-        >
-          Previous
-        </button>
-        <button
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={products && products.length < 10} // Assuming 10 products per page
-        >
-          Next
-        </button>
-      </div>
+      <Pagination />
     </div>
   );
 };

@@ -12,7 +12,7 @@ const AddProductForm = () => {
     description: "",
     price: "",
     category: "",
-    images: "",
+    images: [],
     brand: "",
     inStock: "",
   });

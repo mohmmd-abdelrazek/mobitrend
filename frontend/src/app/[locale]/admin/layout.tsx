@@ -7,8 +7,8 @@ const AdminPanel = ({ children }: { children: ReactNode }) => {
       <h2 className="text-center">
         Admin Dashboard
       </h2>
-      <div className="flex flex-col lg:flex-row flex-1 gap-10 overflow-hidden">
-        <aside className="lg:w-52 w-full">
+      <div className="flex flex-col lg:flex-row flex-1 gap-8 lg:gap-24 overflow-hidden">
+        <aside className="lg:w-40 w-full">
             <AdminSide />
         </aside>
         <main className="flex-1 flex justify-center overflow-y-auto overflow-x-hidden">
