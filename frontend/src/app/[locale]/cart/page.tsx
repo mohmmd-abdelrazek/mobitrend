@@ -26,8 +26,8 @@ const CartPage = () => {
   };
 
   return (
-    <div className="responsive-container flex flex-1 flex-col items-start gap-8 py-8 md:flex-row md:gap-20">
-      <div className="flex w-full flex-col md:flex-1">
+    <div className="responsive-container flex flex-1 flex-col items-start gap-8 py-8 lg:flex-row lg:gap-20">
+      <div className="flex w-full max-w-2xl flex-col lg:flex-1">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold">
             {cart?.cartItems.length > 0
@@ -47,23 +47,21 @@ const CartPage = () => {
           {cart.cartItems.map((item: any) => (
             <div
               key={item.product}
-              className="flex items-center justify-between rounded bg-white p-4 shadow"
+              className="flex h-20 items-center justify-between rounded bg-white p-4 shadow"
             >
-              <div className="flex items-center gap-4">
+              <div className="relative aspect-square">
                 <Image
                   src={item.image}
                   alt={item.name}
                   width={64}
                   height={64}
-                  className="rounded-md object-cover"
+                  className="rounded-md object-cover object-center"
                 />
-                <div className="flex w-52 flex-col overflow-hidden text-ellipsis whitespace-nowrap px-2">
-                  <span className="font-semibold">{item.name}</span>
-                  <span className="text-gray-500">
-                    ${item.price.toFixed(2)}
-                  </span>
-                </div>
               </div>
+              <div className="line-clamp-2 w-44 text-ellipsis overflow-hidden px-2 font-semibold">
+                {item.name}
+              </div>
+              <div className="text-gray-500">${item.price.toFixed(2)}</div>
               <QuantitySelector
                 maxQty={item.countInStock}
                 onQuantityChange={(newQty) =>

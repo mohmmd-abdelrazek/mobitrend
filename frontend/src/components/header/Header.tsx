@@ -2,11 +2,9 @@ import { Link } from "@/src/navigation";
 import { useTranslations } from "next-intl";
 import HeaderClient from "./HeaderClient";
 import { HeaderTextProps } from "../../types/textProps";
-
-import { GrSearch } from "react-icons/gr";
-import { FaShoppingCart } from "react-icons/fa";
 import SearchBar from "../SearchBar";
-import { Linkedin } from "lucide-react";
+import CartIcon from "./CartIcon";
+import { FaShoppingCart } from "react-icons/fa";
 
 export const Header = () => {
   const t = useTranslations("Index");
@@ -31,12 +29,12 @@ export const Header = () => {
       </Link>
       <SearchBar />
       <div className="flex items-center gap-8 font-semibold">
-        <Link href="/cart" className="relative cursor-pointer text-xl text-white">
+      <Link href="/cart" className="relative cursor-pointer text-xl text-white">
           <span>
             <FaShoppingCart />
           </span>
           <div className="absolute -right-3 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 p-1 text-sm text-white">
-            <p>0</p>
+            <CartIcon />
           </div>
         </Link>
         <HeaderClient {...texts} />
