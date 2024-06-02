@@ -6,7 +6,7 @@ import Image from "next/legacy/image";
 
 const Carousel = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const { data, isLoading, error } = useProducts(currentPage);
+  const { data, isLoading, error } = useProducts();
   const [activeIndex, setActiveIndex] = useState(0);
 
   if (isLoading) return <p>Loading...</p>;
