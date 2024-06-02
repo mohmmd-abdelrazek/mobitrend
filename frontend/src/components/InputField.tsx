@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { InputFieldProps } from '@/src/types/signup';
+import React, { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { InputFieldProps } from "@/src/types/signup";
 
 const InputField = ({
   id,
@@ -12,7 +12,7 @@ const InputField = ({
   label,
   placeholder,
   options = [], // For select input
-  textarea = false // Flag to render textarea
+  textarea = false, // Flag to render textarea
 }: InputFieldProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -26,11 +26,11 @@ const InputField = ({
           value={value}
           onChange={onChange}
           disabled={isLoading}
-          placeholder={placeholder ? placeholder : ''}
+          placeholder={placeholder ? placeholder : ""}
           className="text-md block h-28 w-full text-gray-700 shadow-sm transition duration-150 ease-in-out placeholder:text-gray-400 focus:outline-none"
         />
       );
-    } else if (type === 'select') {
+    } else if (type === "select") {
       return (
         <select
           id={id}
@@ -41,7 +41,7 @@ const InputField = ({
           className="text-md block w-full text-gray-700 shadow-sm transition duration-150 ease-in-out placeholder:text-gray-400 focus:outline-none"
         >
           <option value={""}></option>
-          {options.map(option => (
+          {options.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
             </option>
@@ -66,8 +66,11 @@ const InputField = ({
   };
 
   const typeFunction = () => {
-    if ((name === 'password' && showPassword) || (name === 'passwordConfirm' && showConfirmPassword)) {
-      return 'text';
+    if (
+      (name === "password" && showPassword) ||
+      (name === "passwordConfirm" && showConfirmPassword)
+    ) {
+      return "text";
     } else {
       return type;
     }
@@ -81,12 +84,28 @@ const InputField = ({
       >
         {label}
       </label>
-      <div className="flex items-center rounded-lg border border-gray-400 bg-white px-4 py-1 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-opacity-50">
+      <div className="flex items-center rounded-lg border border-gray-400 bg-white px-4 py-1 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-500 focus-within:ring-opacity-50">
         {renderInput()}
         {(name === "password" || name === "passwordConfirm") && (
           <div className="cursor-pointer">
-            <span onClick={() => name === "password" ? setShowPassword(prev => !prev) : setShowConfirmPassword(prev => !prev)}>
-              {name === "password" ? showPassword ? <FaEyeSlash /> : <FaEye /> : showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+            <span
+              onClick={() =>
+                name === "password"
+                  ? setShowPassword((prev) => !prev)
+                  : setShowConfirmPassword((prev) => !prev)
+              }
+            >
+              {name === "password" ? (
+                showPassword ? (
+                  <FaEyeSlash />
+                ) : (
+                  <FaEye />
+                )
+              ) : showConfirmPassword ? (
+                <FaEyeSlash />
+              ) : (
+                <FaEye />
+              )}
             </span>
           </div>
         )}

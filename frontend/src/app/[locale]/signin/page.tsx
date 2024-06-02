@@ -37,7 +37,7 @@ function Signin() {
           {texts.donotHaveAccount}
           <Link
             href="/signup"
-            className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
+            className="font-medium text-orange-600 hover:text-orange-500 hover:underline"
           >
             {texts.createAccount}
           </Link>

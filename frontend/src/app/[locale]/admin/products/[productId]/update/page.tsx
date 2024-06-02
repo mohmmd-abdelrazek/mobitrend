@@ -8,11 +8,15 @@ import { useProduct } from "@/src/services/queries";
 import { updateProduct } from "@/src/services/mutate";
 import { mutate } from "swr";
 
-
 const UpdateProductForm = () => {
   const router = useRouter();
   const { productId } = useParams();
-  const { data: productData, isLoading, error, mutate: mutateProduct } = useProduct();
+  const {
+    data: productData,
+    isLoading,
+    error,
+    mutate: mutateProduct,
+  } = useProduct();
   const [isUpdating, setIsUpdating] = useState(false);
 
   if (isLoading) return <p>Loading...</p>;
@@ -39,8 +43,8 @@ const UpdateProductForm = () => {
       };
       updateProduct(productId, updatedData);
       toast.success("Product updated successfully");
-      mutate("/product")
-      router.push("/admin/products")
+      mutate("/product");
+      router.push("/admin/products");
     } catch (error) {
       console.error("Error updating product:", error);
       toast.error("Failed to update product");
@@ -102,15 +106,15 @@ const UpdateProductForm = () => {
             ]}
           />
           <InputField
-          id="product-brand"
-          name="brand"
-          type="text"
-          value={productData.brand}
-          onChange={handleChange}
-          isLoading={isUpdating}
-          label="Brand"
-          placeholder="Enter brand name"
-        />
+            id="product-brand"
+            name="brand"
+            type="text"
+            value={productData.brand}
+            onChange={handleChange}
+            isLoading={isUpdating}
+            label="Brand"
+            placeholder="Enter brand name"
+          />
           <InputField
             id="product-stock"
             name="inStock"
@@ -124,7 +128,7 @@ const UpdateProductForm = () => {
         </div>
         <button
           type="submit"
-          className="text-bold my-2 w-full rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-600 disabled:bg-gray-300"
+          className="text-bold my-2 w-full rounded bg-orange-500 px-2 py-1 text-white hover:bg-orange-600 disabled:bg-gray-300"
           disabled={isUpdating}
         >
           {isUpdating ? "Updating Product..." : "Update Product"}

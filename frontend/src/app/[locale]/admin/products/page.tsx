@@ -12,7 +12,7 @@ import { mutate } from "swr";
 
 const AdminProductsPage = () => {
   const { data, isLoading, error, mutate: mutateProducts } = useProducts();
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const limit = searchParams.get("limit");
@@ -54,17 +54,23 @@ const AdminProductsPage = () => {
                 <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
                   {product._id}
                 </td>
-                <td className="overflow-hidden max-w-48 text-pretty whitespace-nowrap text-ellipsis border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
+                <td className="max-w-48 overflow-hidden text-ellipsis whitespace-nowrap text-pretty border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
                   {product.name}
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
                   {product.inStock}
                 </td>
                 <td className="flex gap-2 border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
-                  <Link href={`/admin/products/${product._id}/update`} className="rounded-md border-2 border-blue-500 p-1 text-blue-500 hover:bg-blue-500 hover:text-white">
+                  <Link
+                    href={`/admin/products/${product._id}/update`}
+                    className="rounded-md border-2 border-orange-500 p-1 text-orange-500 hover:bg-orange-500 hover:text-white"
+                  >
                     <FaEdit />
                   </Link>
-                  <Link href={`/admin/products/${product._id}/upload-images`} className="rounded-md border-2 border-green-500 p-1 text-green-500 hover:bg-green-500 hover:text-white">
+                  <Link
+                    href={`/admin/products/${product._id}/upload-images`}
+                    className="rounded-md border-2 border-green-500 p-1 text-green-500 hover:bg-green-500 hover:text-white"
+                  >
                     <FaUpload />
                   </Link>
                   <button

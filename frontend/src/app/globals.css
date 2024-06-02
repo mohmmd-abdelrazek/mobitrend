@@ -172,11 +172,10 @@
   }
 
   .team-list::-webkit-scrollbar-thumb {
-    @apply rounded-xl bg-blue-300;
+    @apply rounded-xl bg-orange-300;
   }
 
   .team-list::-webkit-scrollbar-thumb:hover {
     @apply bg-blue-400;
   }
 }
-

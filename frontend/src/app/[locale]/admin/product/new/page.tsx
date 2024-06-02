@@ -33,7 +33,7 @@ const AddProductForm = () => {
         price: parseFloat(productData.price),
         inStock: parseInt(productData.inStock),
       });
-      mutate("/product")
+      mutate("/product");
       toast.success("Product added");
       console.log("Product added:", response.data);
       // Handle further actions like clearing the form or showing a success message
@@ -47,7 +47,7 @@ const AddProductForm = () => {
   };
 
   return (
-    <div className="flex w-full flex-col gap-4 px-8 py-2 shadow-xl my-2 lg:w-9/12 xl:w-7/12">
+    <div className="my-2 flex w-full flex-col gap-4 px-8 py-2 shadow-xl lg:w-9/12 xl:w-7/12">
       <h2 className="">New Product</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-2">
         <InputField
@@ -119,7 +119,7 @@ const AddProductForm = () => {
         </div>
         <button
           type="submit"
-          className="text-bold my-2 w-full rounded bg-blue-500 px-2 py-1 text-white hover:bg-blue-600 disabled:bg-gray-300"
+          className="text-bold my-2 w-full rounded bg-orange-500 px-2 py-1 text-white hover:bg-orange-600 disabled:bg-gray-300"
           disabled={isLoading}
         >
           {isLoading ? "Adding Product..." : "Add Product"}

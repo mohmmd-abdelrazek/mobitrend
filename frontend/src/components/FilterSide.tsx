@@ -1,21 +1,22 @@
-import { usePathname, useRouter } from "../navigation";
-import { useState, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash.debounce";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { ProductState } from "../lib/validators/product-validator";
+import { cn } from "../lib/utils";
 
 type Filters = {
   categories: string[];
   ratings: string;
   price: string;
 };
+
+type FilterType = keyof Filters;
 
 const FilterComponent = () => {
   const router = useRouter();
@@ -39,23 +40,25 @@ const FilterComponent = () => {
     () =>
       debounce((newParams: URLSearchParams) => {
         router.replace(`${pathname}?${newParams.toString()}`);
-      }, 10),
-    [pathname, router],
+      }, 300), // Adjust debounce delay as needed
+    [pathname, router]
   );
 
   // Handle updating filters, debounced to reduce frequent updates
   const handleMultiFilterChange = (
-    filterType: string,
+    filterType: FilterType,
     value: string,
-    isChecked: boolean,
+    isChecked: boolean
   ) => {
-    let stateFilters = { ...filters };
-    const currentFilters = searchParams.get(filterType)?.split(",") || [];
+    const currentFilters = filters[filterType] as string[];
     const updatedFilters = isChecked
       ? [...currentFilters, value]
       : currentFilters.filter((item) => item !== value);
-    stateFilters[filterType] = updatedFilters;
-    setFilters(stateFilters);
+    
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: updatedFilters,
+    }));
 
     const newParams = new URLSearchParams(searchParams);
     if (updatedFilters.length > 0) {
@@ -66,21 +69,14 @@ const FilterComponent = () => {
     debouncedUpdateFilters(newParams);
   };
 
-  const handleSingleFilterChange = (filterType, value) => {
+  const handleSingleFilterChange = (filterType: FilterType, value: string) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [filterType]: value,
+    }));
+
     const newParams = new URLSearchParams(searchParams);
     newParams.set(filterType, value);
-    debouncedUpdateFilters(newParams);
-  };
-
-  // Handle price range input changes with debounce
-  const handlePriceRange = (min: string, max: string) => {
-    const rangeQuery = min && max ? `${min}-${max}` : undefined;
-    const newParams = new URLSearchParams(searchParams);
-    if (rangeQuery) {
-      newParams.set("priceRange", rangeQuery);
-    } else {
-      newParams.delete("priceRange");
-    }
     debouncedUpdateFilters(newParams);
   };
 
@@ -108,7 +104,7 @@ const FilterComponent = () => {
                       handleMultiFilterChange(
                         "categories",
                         category,
-                        e.target.checked,
+                        e.target.checked
                       )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -134,18 +130,15 @@ const FilterComponent = () => {
                 <li key={rating} className="flex items-center">
                   <input
                     type="radio"
-                    id={String(rating)}
-                    checked={filters.ratings.includes(rating)}
+                    id={rating}
+                    checked={filters.ratings === rating}
                     onChange={(e) =>
-                      handleSingleFilterChange(
-                        "ratings",
-                        String(rating)
-                      )
+                      handleSingleFilterChange("ratings", rating)
                     }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                   />
                   <label
-                    htmlFor={String(rating)}
+                    htmlFor={rating}
                     className="ml-3 text-sm text-gray-600"
                   >
                     {rating} Stars & Up
@@ -166,12 +159,10 @@ const FilterComponent = () => {
                   <input
                     type="checkbox"
                     id={price}
-                    checked={searchParams.get("priceRange") === price}
-                    onChange={(e) => {
-                      const newParams = new URLSearchParams(searchParams);
-                      newParams.set("priceRange", price);
-                      debouncedUpdateFilters(newParams);
-                    }}
+                    checked={filters.price === price}
+                    onChange={(e) =>
+                      handleSingleFilterChange("price", price)
+                    }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                   />
                   <label htmlFor={price} className="ml-3 text-sm text-gray-600">

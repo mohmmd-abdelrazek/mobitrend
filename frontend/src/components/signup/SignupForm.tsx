@@ -110,7 +110,7 @@ const SignupForm = (texts: SignupTextProps) => {
 
         if (signinResponse.data.success) {
           mutate("/auth/status");
-          router.push("/")
+          router.push("/");
           toast.success("signed in successfully");
         } else {
           // Handle case where login fails
@@ -225,7 +225,7 @@ const SignupForm = (texts: SignupTextProps) => {
       <button
         type="submit"
         disabled={isLoading}
-        className={`mx-auto mt-4 block w-full rounded-full bg-blue-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 sm:w-2/5 ${isLoading ? "cursor-not-allowed opacity-50" : "opacity-100"} sm:text-md`}
+        className={`mx-auto mt-4 block w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 sm:w-2/5 ${isLoading ? "cursor-not-allowed opacity-50" : "opacity-100"} sm:text-md`}
       >
         {isLoading ? texts.signingUp : texts.signUpButton}
       </button>

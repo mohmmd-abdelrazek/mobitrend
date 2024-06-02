@@ -30,6 +30,7 @@ export interface User {
   role: "admin" | "customer";
   createdAt?: string;
   updatedAt?: string;
+  profile_picture_url?: string;
 }
 
 export interface Review {

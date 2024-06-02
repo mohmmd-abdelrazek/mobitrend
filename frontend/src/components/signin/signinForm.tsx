@@ -30,9 +30,11 @@ const SigninForm = (texts: SigninTextProps) => {
     try {
       const response = await axiosInstance.post("/auth/login", credentials);
       setIsLoading(false);
-      mutate("/auth/status")
+      mutate("/auth/status");
+      mutate("/user/profile");
+      mutate("/cart");
       router.push("/");
-      toast.success("logged in successfully")
+      toast.success("logged in successfully");
     } catch (error) {
       setIsLoading(false);
       if (isAxiosError(error)) {
@@ -72,7 +74,7 @@ const SigninForm = (texts: SigninTextProps) => {
         />
         <Link
           href="/signup"
-          className="mt-1 block w-full text-right font-medium text-gray-600 hover:text-blue-500 hover:underline"
+          className="mt-1 block w-full text-right font-medium text-gray-600 hover:text-orange-500 hover:underline"
         >
           forgot password?
         </Link>
@@ -80,7 +82,7 @@ const SigninForm = (texts: SigninTextProps) => {
       <button
         type="submit"
         disabled={isLoading}
-        className={`mx-auto mt-4 block w-full rounded-full bg-blue-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 sm:w-2/5 ${isLoading ? "cursor-not-allowed opacity-50" : "opacity-100"} sm:text-md`}
+        className={`mx-auto mt-4 block w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 sm:w-2/5 ${isLoading ? "cursor-not-allowed opacity-50" : "opacity-100"} sm:text-md`}
       >
         {isLoading ? texts.signingIn : texts.signIn}
       </button>

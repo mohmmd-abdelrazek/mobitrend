@@ -41,6 +41,10 @@ export function useUser() {
   return useSWRImmutable<User>("/user/profile");
 }
 
+export function useAvatar() {
+  return useSWRImmutable<User>("/user/avatar");
+}
+
 export function useReviews() {
   const { productId } = useParams();
   return useSWRImmutable<Review[]>(

@@ -1,6 +1,10 @@
 import { Request, Response } from "express";
+import fs from 'fs';
+import { promisify } from 'util';
 import ProductModel from "../models/ProductModel";
 import cloudinary from "../config/cloudinaryConfig";
+
+const unlinkAsync = promisify(fs.unlink);
 
 export const getAllProducts = async (req: Request, res: Response) => {
   interface QueryParams {
@@ -64,7 +68,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = req.query.keyword ? 0 : 6;
+    const limit = req.query.keyword ? 0 : 0;
     const skip = (page - 1) * limit;
 
     const filter = buildFilter(req.query);
@@ -104,7 +108,7 @@ export const createProduct = async (req: Request, res: Response) => {
   try {
     const newProduct = new ProductModel(req.body);
     await newProduct.save();
-    console.log(newProduct)
+    console.log(newProduct);
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(500).json({ message: "An unexpected error occurred", error });
@@ -187,6 +191,24 @@ export const uploadImages = async (req: Request, res: Response) => {
     const urls = await Promise.all(
       (req.files as Express.Multer.File[]).map((file) => uploader(file))
     );
+
+    await Promise.all(
+      (req.files as Express.Multer.File[]).map((file) =>
+        unlinkAsync(file.path)
+      )
+    );
+
+    // Fetch the product from the database
+    const product = await ProductModel.findById(id);
+
+    if (product) {
+      // Update product's images array with new URLs
+      product.images.unshift(...urls.map((url) => url.secure_url));
+
+      // Save the updated product back to the database
+      await product.save();
+    }
+
     res.status(200).json({
       message: "Images uploaded successfully",
       data: urls.map((url) => url.secure_url),

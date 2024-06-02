@@ -61,14 +61,14 @@ const UploadImages = () => {
         {files.length > 0 ? (
           <div className="small-dynamic-grid my-4">
             {Array.from(files).map((file, index) => (
-                <div key={index} className="relative aspect-square w-full">
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt="Preview"
-                    layout="fill"
-                    className="h-full w-full rounded-t-md object-cover object-center"
-                  />
-                </div>
+              <div key={index} className="relative aspect-square w-full">
+                <Image
+                  src={URL.createObjectURL(file)}
+                  alt="Preview"
+                  layout="fill"
+                  className="h-full w-full rounded-t-md object-cover object-center"
+                />
+              </div>
             ))}
           </div>
         ) : (
@@ -79,7 +79,7 @@ const UploadImages = () => {
 
         <button
           type="submit"
-          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:bg-gray-300"
+          className="rounded bg-orange-500 px-4 py-2 text-white hover:bg-orange-600 disabled:bg-gray-300"
           disabled={uploading}
         >
           {uploading ? "Uploading..." : "Upload"}
@@ -88,7 +88,7 @@ const UploadImages = () => {
         {images.length > 0 ? (
           <div className="small-dynamic-grid mt-10">
             {images.map((image: string, index: number) => (
-              <div key={index} className="relative group overflow-hidden">
+              <div key={index} className="group relative overflow-hidden">
                 <div className="relative aspect-square w-full">
                   <Image
                     src={image}
@@ -103,7 +103,7 @@ const UploadImages = () => {
                     await deleteImage(image);
                     mutate();
                   }}
-                  className="text-xm transition-all z-1 absolute -bottom-full group-hover:bottom-0 flex w-full justify-center bg-red-500 font-semibold text-white"
+                  className="text-xm z-1 absolute -bottom-full flex w-full justify-center bg-red-500 font-semibold text-white transition-all group-hover:bottom-0"
                 >
                   <TicketX />
                 </button>

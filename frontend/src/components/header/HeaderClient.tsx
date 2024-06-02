@@ -1,5 +1,6 @@
 "use client";
 import { Link } from "@/src/navigation";
+import Image from "next/legacy/image";
 import { useAuth, useUser } from "../../services/queries";
 import LoadingIndicator from "../LoadingIndicator";
 import { axiosInstance } from "../../services/fetcher";
@@ -13,11 +14,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { mutate } from "swr";
 
 const Header = (texts: HeaderTextProps) => {
-  const { data, isLoading, error, mutate } = useAuth();
+  const { data, isLoading, error, mutate: mutateAuth } = useAuth();
   const router = useRouter();
-  const { data: user } = useUser();
+  const { data: user, mutate: mutateUser } = useUser();
 
   if (isLoading) return <LoadingIndicator />;
   if (error)
@@ -30,7 +32,9 @@ const Header = (texts: HeaderTextProps) => {
   const handleLogout = async () => {
     try {
       const result = await axiosInstance("/auth/logout");
-      mutate();
+      mutateAuth();
+      mutateUser();
+      mutate("/cart");
       router.push("/signin");
       toast.success("logged out successfully");
     } catch (error) {
@@ -43,8 +47,18 @@ const Header = (texts: HeaderTextProps) => {
       {isLoggedIn && (
         <div className="relative flex justify-center">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex cursor-pointer items-center rounded-md p-1 text-2xl font-bold text-white transition-colors duration-200 ease-in-out focus:outline-none hover:bg-gray-200 hover:text-slate-900">
-              <FaRegCircleUser aria-hidden="true" />
+            <DropdownMenuTrigger className="flex cursor-pointer items-center rounded-md p-1 text-2xl font-bold text-white transition-colors duration-200 ease-in-out hover:bg-gray-200 hover:text-slate-900 focus:outline-none">
+              {user?.profile_picture_url ? (
+                <Image
+                  src={user.profile_picture_url}
+                  alt="Avatar"
+                  width={24}
+                  height={24}
+                  className="mr-4 rounded-full"
+                />
+              ) : (
+                <FaRegCircleUser aria-hidden="true" />
+              )}
               <span className="hidden pl-2 text-xs capitalize sm:inline">
                 {user?.name}
               </span>
@@ -55,6 +69,14 @@ const Header = (texts: HeaderTextProps) => {
             <DropdownMenuContent align="end" className="flex flex-col">
               <DropdownMenuItem asChild>
                 <Link
+                  href="/admin/dashboard"
+                  className="whitespace-nowrap px-4 py-3 hover:bg-slate-100"
+                >
+                  Dashboard
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link
                   href="/me/profile"
                   className="whitespace-nowrap px-4 py-3 hover:bg-slate-100"
                 >
@@ -63,18 +85,17 @@ const Header = (texts: HeaderTextProps) => {
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link
-                  href="/admin/dashboard"
+                  href="/me/orders"
                   className="whitespace-nowrap px-4 py-3 hover:bg-slate-100"
                 >
-                  Dashboard
+                  Orders
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild className="mx-2 my-4 rounded-full bg-red-600 px-3 py-1 justify-center text-white transition-colors hover:bg-red-700">
-                <button
-                  onClick={handleLogout}
-                >
-                  {texts.logOut}
-                </button>
+              <DropdownMenuItem
+                asChild
+                className="mx-2 my-4 justify-center rounded-full bg-red-600 px-3 py-1 text-white transition-colors hover:bg-red-700"
+              >
+                <button onClick={handleLogout}>{texts.logOut}</button>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -83,7 +104,7 @@ const Header = (texts: HeaderTextProps) => {
       {!isLoggedIn && (
         <Link
           href="/signin"
-          className="rounded-full bg-blue-600 px-3 py-1 text-sm text-white transition-colors hover:bg-blue-700"
+          className="rounded-full bg-orange-600 px-3 py-1 text-sm text-white transition-colors hover:bg-orange-700"
         >
           {texts.signIn}
         </Link>

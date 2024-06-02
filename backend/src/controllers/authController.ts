@@ -118,12 +118,10 @@ export const logout = (req: Request, res: Response) => {
 };
 
 export const status = (req: Request, res: Response) => {
-  res
-    .status(200)
-    .json({
-      isAuthenticated: req.isAuthenticated(),
-      isAdmin: req.isAuthenticated() && req.user?.role === "admin",
-    });
+  res.status(200).json({
+    isAuthenticated: req.isAuthenticated(),
+    isAdmin: req.isAuthenticated() && req.user?.role === "admin",
+  });
 };
 
 export const googleCallback = passport.authenticate("google");

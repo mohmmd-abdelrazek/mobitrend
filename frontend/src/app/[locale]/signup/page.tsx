@@ -3,7 +3,6 @@ import { Link } from "@/src/navigation";
 import { SignupTextProps } from "@/src/types/textProps";
 import { useTranslations } from "next-intl";
 
-
 const Signup = () => {
   const t = useTranslations("Signup");
   const texts: SignupTextProps = {
@@ -34,7 +33,7 @@ const Signup = () => {
           {texts.alreadyHaveAccount}
           <Link
             href="/signin"
-            className="font-medium text-blue-600 hover:text-blue-500"
+            className="font-medium text-orange-600 hover:text-orange-500"
           >
             {texts.signIn}
           </Link>

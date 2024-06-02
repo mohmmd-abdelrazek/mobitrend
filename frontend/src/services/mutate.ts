@@ -40,6 +40,18 @@ export async function uploadImages(
   return response.data;
 }
 
+export async function uploadAvatar(
+  data: FormData,
+) {
+  const response = await axiosInstance.post(
+    "/user/upload-avatar",
+    data,
+  );
+  mutate("user/avatar");
+  toast.success("Avatar uploaded");
+  return response.data;
+}
+
 export async function addReview(productId: string | string[], data: any) {
   const response = await axiosInstance.post(`/review/${productId}`, data);
   mutate(`/review/${productId}`);

@@ -36,14 +36,14 @@ const ImageGallery = () => {
           className="rounded-lg object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-110"
         />
       </div>
-      <div className="flex gap-2 overflow-x-auto">
+      <div className="flex w-full gap-2 overflow-x-auto">
         {data?.images?.map((image: string, index: number) => (
           <div
             key={index}
             className={clsx(
-              "relative h-18 w-18 flex-shrink-0 cursor-pointer overflow-hidden rounded-lg transition-shadow duration-300 ease-in-out sm:h-20 sm:w-20",
+              "h-18 w-18 relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg transition-shadow duration-300 ease-in-out sm:h-20 sm:w-20",
               {
-                "shadow-xl border-2 border-blue-500 border-opacity-80":
+                "border-2 border-orange-500 border-opacity-80 shadow-xl":
                   image === activeImage,
                 "shadow hover:shadow-md": image !== activeImage,
               },
@@ -52,7 +52,7 @@ const ImageGallery = () => {
             onKeyDown={(event) =>
               event.key === "Enter" && handleImageClick(image)
             }
-            tabIndex={0} // Make div focusable
+            tabIndex={0}
             aria-label={`View image ${index + 1}`}
           >
             <Image

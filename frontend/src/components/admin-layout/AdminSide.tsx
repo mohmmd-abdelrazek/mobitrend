@@ -3,16 +3,13 @@ import Link from "next/link";
 import { usePathname } from "@/src/navigation";
 import clsx from "clsx";
 
-const links = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "🏠" },
-  { href: "/admin/product/new", label: "New Product", icon: "➕" },
-  { href: "/admin/products", label: "Products", icon: "📦" },
-  { href: "/admin/orders", label: "Orders", icon: "📑" },
-  { href: "/admin/users", label: "Users", icon: "👥" },
-  { href: "/admin/reviews", label: "Reviews", icon: "⭐" },
-];
+type Link = {
+  href: string;
+  label: string;
+  icon: string;
+};
 
-const AdminSide = () => {
+const AdminSide = ({ links }: { links: Link[] }) => {
   const pathname = usePathname();
 
   return (
@@ -24,7 +21,7 @@ const AdminSide = () => {
             className={clsx(
               "flex justify-center gap-2 text-ellipsis text-nowrap rounded-sm px-2 py-1 text-sm font-bold md:justify-normal",
               pathname.split("/")[2] === link.href.split("/")[2]
-                ? "bg-blue-200 text-blue-600"
+                ? "bg-orange-200 text-orange-600"
                 : "hover:bg-gray-100",
             )}
           >

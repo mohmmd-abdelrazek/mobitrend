@@ -30,13 +30,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
           className="h-full w-full rounded-md object-cover object-center"
         />
       </div>
-      <h3 className="text-md mt-2 flex-1 overflow-hidden text-ellipsis font-bold">
-        {product.name}
-      </h3>
+      <div className="flex-1">
+        <h3 className="text-md mt-2 line-clamp-2 w-full overflow-hidden text-ellipsis p-0 font-bold">
+          {product.name}
+        </h3>
+      </div>
       <Rating value={product.rating} numReviews={product.numReviews} />
       <Link
         href={`/product/${product._id}`}
-        className="my-1 inline-block rounded bg-blue-500 px-2 py-1 text-center text-xs font-bold text-white hover:bg-blue-600"
+        className="my-1 inline-block rounded bg-orange-500 px-2 py-1 text-center text-xs font-bold text-white hover:bg-orange-600"
       >
         View Details
       </Link>

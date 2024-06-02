@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { mutate } from 'swr';
+import { useState, useEffect } from "react";
+import { mutate } from "swr";
 
 interface QuantitySelectorProps {
   maxQty?: number;
@@ -12,7 +12,6 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   onQuantityChange,
   quantity,
 }) => {
-
   const handleIncrement = () => {
     if (quantity < maxQty) {
       const newQty = quantity + 1;
@@ -30,11 +29,11 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
   };
 
   return (
-    <div className="flex items-center text-xs font-md">
+    <div className="font-md flex items-center text-xs">
       <button
         onClick={handleDecrement}
         disabled={quantity < 1}
-        className="text-white bg-red-500 px-2 py-1 hover:bg-red-600 rounded disabled:bg-red-300"
+        className="rounded bg-red-500 px-2 py-1 text-white hover:bg-red-600 disabled:bg-red-300"
       >
         -
       </button>
@@ -42,7 +41,7 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
       <button
         onClick={handleIncrement}
         disabled={quantity >= maxQty}
-        className="text-white bg-blue-500 hover:bg-blue-600 px-2 py-1 rounded disabled:bg-blue-300"
+        className="rounded bg-orange-500 px-2 py-1 text-white hover:bg-orange-600 disabled:bg-orange-300"
       >
         +
       </button>

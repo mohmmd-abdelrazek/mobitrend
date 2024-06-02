@@ -45,7 +45,7 @@ export default function LocaleSwitcherSelect({
     >
       <p className="sr-only">{label}</p>
       <select
-        className="block w-full cursor-pointer appearance-none rounded-md bg-transparent pl-6 pr-2 placeholder-gray-500 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="block w-full cursor-pointer appearance-none rounded-md bg-transparent pl-6 pr-2 placeholder-gray-500 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
         defaultValue={defaultValue}
         disabled={isPending}
         onChange={onSelectChange}

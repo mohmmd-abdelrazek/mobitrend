@@ -5,17 +5,27 @@ import {
   removeItemFromCart,
   updateItemInCart,
 } from "@/src/services/mutate";
-import { useCart } from "@/src/services/queries";
+import { useCart, useProductImage, useProducts } from "@/src/services/queries";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect } from "react";
+import { useRouter } from "@/src/navigation";
 
 const CartPage = () => {
   const { data: cart, isLoading, error, mutate } = useCart();
+  const { data: productsData } = useProducts();
+  const products = productsData?.products;
+  const router = useRouter();
 
   useEffect(() => {
     mutate(); // This may not be necessary unless you need to force a revalidation
   }, [mutate]);
+
+  useEffect(() => {
+    if (cart) {
+      localStorage.setItem("cartItems", JSON.stringify(cart.cartItems));
+    }
+  }, [cart]);
 
   if (isLoading) return <p className="flex-1">Loading...</p>;
   if (error) return <p className="flex-1">Error loading the cart.</p>;
@@ -51,22 +61,37 @@ const CartPage = () => {
             >
               <div className="relative aspect-square">
                 <Image
-                  src={item.image}
+                  src={
+                    products?.find(
+                      (product: any) => product._id === item.product,
+                    )?.images[0] || item.image
+                  }
                   alt={item.name}
                   width={64}
                   height={64}
                   className="rounded-md object-cover object-center"
                 />
               </div>
-              <div className="line-clamp-2 w-44 text-ellipsis overflow-hidden px-2 font-semibold">
+              <div className="line-clamp-2 w-44 overflow-hidden text-ellipsis px-2 font-semibold">
                 {item.name}
               </div>
               <div className="text-gray-500">${item.price.toFixed(2)}</div>
               <QuantitySelector
                 maxQty={item.countInStock}
-                onQuantityChange={(newQty) =>
-                  handleQuantityChange(item.product, newQty)
-                }
+                onQuantityChange={(newQty) => {
+                  handleQuantityChange(item.product, newQty);
+                  console.log(products);
+                  console.log(
+                    products?.find(
+                      (product: any) => product._id === item.product,
+                    )?.images[0],
+                  );
+                  console.log(
+                    products?.find(
+                      (product: any) => product._id === item.product,
+                    ),
+                  );
+                }}
                 quantity={item.qty}
               />
               <button
@@ -79,8 +104,10 @@ const CartPage = () => {
           ))}
         </div>
       </div>
-      <div className="mt-4 w-52 rounded bg-gray-100 p-4 text-lg shadow">
-        <h3 className="mb-3 text-lg font-bold">Order Summary</h3>
+      <div className="mt-4 w-52 rounded p-4 text-lg shadow-lg">
+        <h3 className="mb-3 border-b-2 pb-2 text-lg font-bold">
+          Order Summary
+        </h3>
         <p>
           Total Items:{" "}
           {cart.cartItems.reduce(
@@ -88,7 +115,7 @@ const CartPage = () => {
             0,
           )}
         </p>
-        <p>
+        <p className="mb-3 border-b-2 pb-2">
           <span>Total:</span> $
           {cart.cartItems.reduce(
             (total: number, item: any) => total + item.qty,
@@ -97,6 +124,12 @@ const CartPage = () => {
             ? 0
             : cart.totalPrice.toFixed(2)}
         </p>
+        <button
+          className="sm:text-md mx-auto mt-4 block w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"
+          onClick={() => router.push("/shipping")}
+        >
+          Check Out
+        </button>
       </div>
     </div>
   );
