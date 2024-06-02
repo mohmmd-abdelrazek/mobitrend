@@ -6,7 +6,7 @@ export const AVAILABLE_CATEGORIES = [
   "clothing",
 ] as const;
 
-export const AVAILABLE_RATINGS = [5, 4, 3, 2, 1] as const;
+export const AVAILABLE_RATINGS = ["5", "4", "3", "2", "1"] as const;
 export const AVAILABLE_PRICE = ["0-50", "51-100", "101-200"] as const;
 
 export const ProductFilterValidator = z.object({
