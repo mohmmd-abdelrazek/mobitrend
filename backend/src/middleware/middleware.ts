@@ -35,6 +35,7 @@ export const requestLogger = (
   console.log("Method:", req.method);
   console.log("Path:  ", req.path);
   console.log("Body:  ", req.body);
+  console.log("user: ", req.user)
   console.log("---");
   next();
 };
@@ -71,7 +72,7 @@ export const isAuthenticated = (
   next: NextFunction
 ) => {
   if (req.isAuthenticated()) {
-    // Assuming Passport.js is used for authentication
+    console.log('User is authenticated:', req.user); // Debug log
     return next();
   }
   res.status(401).json({ error: "Not authenticated" });

@@ -55,8 +55,12 @@ export function useReviews() {
 export function useCart() {
   return useSWRImmutable("/cart");
 }
-export function useOrders() {
+export function useAllOrders() {
   return useSWRImmutable<Order[]>("/order");
+}
+
+export function useMyOrders() {
+  return useSWRImmutable<Order[]>("/order/myorders");
 }
 
 export function useOrder() {

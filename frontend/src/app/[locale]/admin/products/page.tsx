@@ -27,7 +27,7 @@ const AdminProductsPage = () => {
       <h1 className="my-4 text-xl font-bold sm:text-2xl">
         Number of Products: {data.productsCount}
       </h1>
-      <div className="w-full overflow-x-auto">
+      <div className="w-full overflow-x-auto flex-1">
         <table className="min-w-full table-auto border-collapse text-left">
           <thead>
             <tr>

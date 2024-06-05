@@ -44,23 +44,47 @@ export interface Review {
   updatedAt?: string;
 }
 
-export interface Order {
-  id: number;
-  userId: number;
-  products: OrderProduct[];
-  paymentDetails: PaymentDetails;
-  shippingDetails: ShippingDetails;
-  status: "pending" | "completed" | "cancelled";
-  totalAmount: number;
-  createdAt?: string;
-  updatedAt?: string;
+export interface OrderItem {
+  name: string;
+  qty: number;
+  image: string;
+  price: number;
+  product: string; // Assuming the product is referenced by its ObjectId in string format
 }
 
-export interface OrderProduct {
-  productId: number;
-  variantId: number;
-  quantity: number;
-  price: number;
+// Define the ShippingAddress interface
+export interface ShippingAddress {
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
+
+// Define the PaymentResult interface
+export interface PaymentResult {
+  id: string; // Payment ID from payment gateway
+  status: string;
+  update_time: string;
+  email_address: string;
+}
+
+// Define the Order interface
+export interface Order {
+  _id?: string; // Optional, since MongoDB will generate this
+  user: string; // Reference to the user who placed the order (user ID in string format)
+  orderItems: OrderItem[];
+  shippingAddress: ShippingAddress;
+  paymentMethod: string;
+  paymentResult?: PaymentResult; // Optional, may not be present initially
+  taxPrice: number;
+  shippingPrice: number;
+  totalPrice: number;
+  isPaid: boolean;
+  paidAt?: Date; // Optional, may not be set initially
+  isDelivered: boolean;
+  deliveredAt?: Date; // Optional, may not be set initially
+  createdAt?: Date; // Automatically created by Mongoose
+  updatedAt?: Date; // Automatically created by Mongoose
 }
 
 export interface PaymentDetails {

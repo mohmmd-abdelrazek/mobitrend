@@ -20,7 +20,7 @@ export const addOrder = async (req: Request, res: Response) => {
 
   try {
     const order = new OrderModel({
-      user: req.user?._id, // Assuming req.user is populated by your authentication middleware
+      user: req.user?._id,
       orderItems,
       shippingAddress,
       paymentMethod,
@@ -100,8 +100,16 @@ export const updateOrderToDelivered = async (req: Request, res: Response) => {
 
 // Get all orders of a user
 export const getMyOrders = async (req: Request, res: Response) => {
+  const userId = req.user?._id;
+
+  if (!userId) {
+    console.log('User ID is not available.');
+    res.status(400).json({ message: "User not authenticated" });
+    return;
+  }
+
   try {
-    const orders = await OrderModel.find({ user: req.user?._id });
+    const orders = await OrderModel.find({ user: userId });
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving orders", error });

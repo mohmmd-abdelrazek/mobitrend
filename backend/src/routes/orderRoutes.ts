@@ -6,14 +6,15 @@ const router = express.Router();
 
 router.post("/", isAuthenticated, orderController.addOrder);
 
+router.get("/myorders", isAuthenticated, orderController.getMyOrders);
+
+router.get("/", isAdmin, orderController.getAllOrders);
+
 router.get("/:id", isAuthenticated, orderController.getOrderById);
 
 router.put("/:id/pay", isAuthenticated, orderController.updateOrderToPaid);
 
 router.put("/:id/deliver", isAdmin, orderController.updateOrderToDelivered);
 
-router.get("/myorders", isAuthenticated, orderController.getMyOrders);
-
-router.get("/", isAdmin, orderController.getAllOrders);
 
 export default router;

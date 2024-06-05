@@ -11,6 +11,7 @@ export const getUserProfile = async (req: Request, res: Response) => {
     return res.status(401).send("User is not authenticated");
   }
   const userId = req.user.id;
+
   try {
     const user = await UserModel.findById(userId).select("id name email profile_picture_url createdAt");
     if (user) {

@@ -2,9 +2,10 @@ import Link from "next/link";
 import Rating from "./Rating";
 import { Product } from "../types/types";
 import { useProductImage } from "../services/queries";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { Card } from "./ui/card";
+import sampleImage from "@/src/assest/sampleImage.jpg"
 
 interface ProductCardProps {
   product: Product;
@@ -22,12 +23,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
   return (
     <Card className="flex h-72 w-full flex-col p-4 transition-shadow duration-300 hover:shadow-lg">
-      <div className="relative aspect-square w-full">
+      <div className="relative w-full aspect-square">
         <Image
           src={image}
           alt={product.name}
-          layout="fill"
-          className="h-full w-full rounded-md object-cover object-center"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 30vw"
+          priority
+          className="rounded-md object-cover object-center"
         />
       </div>
       <div className="flex-1">

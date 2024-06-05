@@ -4,6 +4,8 @@ import { isAuthenticated, isAdmin} from "../middleware/middleware"; // Assuming 
 
 const router = Router();
 
+router.post('/create-checkout-session', isAuthenticated, PaymentController.createCheckoutSession);
+
 router.post('/payments', isAuthenticated, PaymentController.createPayment);
 
 router.put('/payments/:paymentId/status', isAdmin, PaymentController.updatePaymentStatus);
@@ -18,5 +20,6 @@ router.post('/payments/confirm', PaymentController.confirmPayment);
 router.post('/payments/:paymentId/failure', isAdmin, PaymentController.handlePaymentFailure);
 
 router.delete('/payments/:paymentId', isAdmin, PaymentController.deletePayment);
+
 
 export default router;

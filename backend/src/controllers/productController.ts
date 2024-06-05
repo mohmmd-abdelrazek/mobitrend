@@ -68,7 +68,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
   try {
     const page = parseInt(req.query.page as string) || 1;
-    const limit = req.query.keyword ? 0 : 0;
+    const limit = req.query.keyword ? 0 : 6;
     const skip = (page - 1) * limit;
 
     const filter = buildFilter(req.query);

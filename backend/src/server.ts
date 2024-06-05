@@ -20,6 +20,9 @@ import promotionRoutes from "./routes/promotionRoutes";
 import connectDB from "./config/db";
 import passport from "./config/passportConfig";
 import { sessionMiddleware } from "./config/sessionConfig";
+import { requestLogger } from "./middleware/middleware";
+import { handleStripeWebhook } from "./controllers/paymentController";
+import bodyParser from "body-parser";
 
 const app = express();
 
@@ -29,9 +32,9 @@ app.use(
     credentials: true,
   })
 );
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 connectDB();
 
@@ -41,11 +44,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // const limiter = rateLimit({
-//   windowMs: 10 * 60 * 1000, // 15 minutes
-//   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
-// });
-
-// app.use(limiter);
+  //   windowMs: 10 * 60 * 1000, // 15 minutes
+  //   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  // });
+  
+  // app.use(limiter);
+  app.use(requestLogger);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
@@ -60,6 +64,7 @@ app.use("/api/inventory", inventoryRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/promotion", promotionRoutes);
 
+app.post('/api/webhook', bodyParser.raw({ type: 'application/json' }), handleStripeWebhook);
 app.use((req: Request, res: Response) => {
   res.status(404).json({ message: "Not Found" });
 });

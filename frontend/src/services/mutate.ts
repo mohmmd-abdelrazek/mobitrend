@@ -114,3 +114,17 @@ export const clearCart = async () => {
   mutate("/cart");
   return response.data;
 };
+
+export async function addOrder(orderData: any) {
+  const response = await axiosInstance.post("/order", orderData);
+  mutate("/order");
+  toast.success("Order added successfully");
+  return response.data;
+}
+
+export async function deleteOrder(orderId: string) {
+  const response = await axiosInstance.delete(`/order/${orderId}`);
+  mutate("/order");
+  toast.success("Order deleted successfully");
+  return response.data;
+}

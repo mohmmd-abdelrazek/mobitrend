@@ -3,7 +3,7 @@ import "@/src/app/globals.css";
 import Header from "@/src/components/header/Header";
 import Footer from "@/src/components/Footer";
 import { Toaster } from "react-hot-toast";
-import SWRProvider from "./providers";
+import { SWRProvider } from "./providers";
 
 export const metadata: Metadata = {
   title: "MobiTrend",
@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body className="flex min-h-screen flex-col">
         <SWRProvider>
-        <Toaster position="top-center" />
+          <Toaster position="top-center" />
           <Header />
           {children}
           <Footer />
