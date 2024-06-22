@@ -11,6 +11,7 @@ import signinIcon from "@/src/assest/signin.gif";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
 import { useSearchParams } from "next/navigation";
+import { mergeCart } from "@/src/services/mutate";
 
 const SignupForm = (texts: SignupTextProps) => {
   const [formData, setFormData] = useState({
@@ -112,10 +113,9 @@ const SignupForm = (texts: SignupTextProps) => {
         });
 
         if (signinResponse.data.success) {
-          await mutate("/auth/status");
-          await mutate("/user/profile");
-          await mer;
-          await mutate("/cart");
+          mutate("/auth/status");
+          mergeCart();
+          mutate("/user/profile");
           router.push(redirectPath ?? "/");
           toast.success("signed in successfully");
         } else {
