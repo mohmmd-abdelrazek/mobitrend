@@ -21,7 +21,7 @@ const Header = (texts: HeaderTextProps) => {
   const router = useRouter();
   const { data: user, mutate: mutateUser } = useUser();
 
-  if (isLoading) return <LoadingIndicator />;
+  if (isLoading) return <LoadingIndicator w={32} ws={20} d={4} />;
   if (error)
     return (
       <div className="text-center text-red-600">Failed to load user data.</div>
@@ -31,10 +31,10 @@ const Header = (texts: HeaderTextProps) => {
 
   const handleLogout = async () => {
     try {
-      const result = await axiosInstance("/auth/logout");
-      mutateAuth();
-      mutateUser();
-      mutate("/cart");
+      await axiosInstance("/auth/logout");
+      await mutateAuth();
+      await mutateUser();
+      await mutate("/cart");
       router.push("/signin");
       toast.success("logged out successfully");
     } catch (error) {
@@ -45,7 +45,7 @@ const Header = (texts: HeaderTextProps) => {
   return (
     <>
       {isLoggedIn && (
-        <div className="relative flex justify-center">
+        <div className="relative flex w-20 sm:w-32 justify-center">
           <DropdownMenu>
             <DropdownMenuTrigger className="flex cursor-pointer items-center rounded-md p-1 text-2xl font-bold text-white transition-colors duration-200 ease-in-out hover:bg-gray-200 hover:text-slate-900 focus:outline-none">
               {user?.profile_picture_url ? (
@@ -60,7 +60,7 @@ const Header = (texts: HeaderTextProps) => {
                 <FaRegCircleUser aria-hidden="true" />
               )}
               <span className="hidden pl-2 text-xs capitalize sm:inline">
-                {user?.name}
+                {user?.name.split(" ")[0]}
               </span>
               <span className="text-xs">
                 <FaCaretDown />
@@ -102,12 +102,14 @@ const Header = (texts: HeaderTextProps) => {
         </div>
       )}
       {!isLoggedIn && (
-        <Link
-          href="/signin"
-          className="rounded-full bg-orange-600 px-3 py-1 text-sm text-white transition-colors hover:bg-orange-700"
-        >
-          {texts.signIn}
-        </Link>
+        <div className="flex w-20 sm:w-32 justify-center">
+          <Link
+            href="/signin"
+            className="rounded-full bg-orange-600 px-3 py-1 text-sm text-white transition-colors hover:bg-orange-700"
+          >
+            {texts.signIn}
+          </Link>
+        </div>
       )}
     </>
   );

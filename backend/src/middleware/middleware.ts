@@ -65,20 +65,17 @@ export const errorHandler = (
   next(error);
 };
 
-// Middleware to check if the user is authenticated
 export const isAuthenticated = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   if (req.isAuthenticated()) {
-    console.log('User is authenticated:', req.user); // Debug log
     return next();
   }
   res.status(401).json({ error: "Not authenticated" });
 };
 
-// Middleware to check if the user has an admin role
 export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
   const userRole = req.user?.role;
   if (req.isAuthenticated() && userRole === "admin") {

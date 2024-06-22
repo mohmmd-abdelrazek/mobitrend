@@ -7,15 +7,13 @@ import { useState, useEffect } from "react";
 
 const ImageGallery = () => {
   const { data, isLoading, error } = useProductImages();
-  const [activeImage, setActiveImage] = useState("");
+  const [activeImage, setActiveImage] = useState(
+    "https://res.cloudinary.com/dhliba9i5/image/upload/v1714169979/products/default-placeholder_r9thjf.png",
+  );
 
   useEffect(() => {
     if (data?.images?.length > 0) {
       setActiveImage(data.images[0]);
-    } else {
-      setActiveImage(
-        "https://res.cloudinary.com/dhliba9i5/image/upload/v1714169979/products/default-placeholder_r9thjf.png",
-      );
     }
   }, [data]);
 
@@ -31,38 +29,40 @@ const ImageGallery = () => {
       <div className="relative aspect-square w-full">
         <Image
           src={activeImage}
+          className="rounded-lg object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-110"
           alt="Active product image"
           layout="fill"
-          className="rounded-lg object-cover object-center transition-transform duration-300 ease-in-out group-hover:scale-110"
+          priority
         />
       </div>
       <div className="flex w-full gap-2 overflow-x-auto">
-        {data?.images?.map((image: string, index: number) => (
-          <div
-            key={index}
-            className={clsx(
-              "h-18 w-18 relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg transition-shadow duration-300 ease-in-out sm:h-20 sm:w-20",
-              {
-                "border-2 border-orange-500 border-opacity-80 shadow-xl":
-                  image === activeImage,
-                "shadow hover:shadow-md": image !== activeImage,
-              },
-            )}
-            onClick={() => handleImageClick(image)}
-            onKeyDown={(event) =>
-              event.key === "Enter" && handleImageClick(image)
-            }
-            tabIndex={0}
-            aria-label={`View image ${index + 1}`}
-          >
-            <Image
-              src={image}
-              alt={`Thumbnail ${index + 1}`}
-              layout="fill"
-              className="transform rounded-lg object-cover object-center"
-            />
-          </div>
-        ))}
+        {data?.images?.length > 0 &&
+          data?.images?.map((image: string, index: number) => (
+            <div
+              key={index}
+              className={clsx(
+                "h-18 w-18 relative flex-shrink-0 cursor-pointer overflow-hidden rounded-lg transition-shadow duration-300 ease-in-out sm:h-20 sm:w-20",
+                {
+                  "border-2 border-orange-500 border-opacity-80 shadow-xl":
+                    image === activeImage,
+                  "shadow hover:shadow-md": image !== activeImage,
+                },
+              )}
+              onClick={() => handleImageClick(image)}
+              onKeyDown={(event) =>
+                event.key === "Enter" && handleImageClick(image)
+              }
+              tabIndex={0}
+              aria-label={`View image ${index + 1}`}
+            >
+              <Image
+                src={image}
+                alt={`Thumbnail ${index + 1}`}
+                layout="fill"
+                className="transform rounded-lg object-cover object-center"
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

@@ -8,7 +8,7 @@ interface RatingProps {
 const Rating = ({ value, numReviews }: RatingProps) => {
     return (
         <div className="flex items-center gap-2">
-            <div className='flex'>
+            <div className='flex gap-1'>
             {[1, 2, 3, 4, 5].map(star => (
                 <span key={star}>
                     {value >= star ? <FaStar color="#ffc107" /> :
@@ -17,7 +17,7 @@ const Rating = ({ value, numReviews }: RatingProps) => {
                 </span>
             ))}
             </div>
-            <span>({numReviews})</span>
+            <span className='font-bold text-sm'>({numReviews})</span>
         </div>
     );
 };

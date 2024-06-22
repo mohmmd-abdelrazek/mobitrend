@@ -9,6 +9,7 @@ declare global {
 }
 declare module "express-session" {
   interface SessionData {
-    cartId?: string; // Optional cartId
+    cartId?: string;
+    cartIdBeforeLogin?: string;
   }
 }

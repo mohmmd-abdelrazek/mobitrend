@@ -1,52 +1,95 @@
 "use client";
-import QuantitySelector from "@/src/components/QuantitySelector";
+import { useState, useEffect, useCallback } from "react";
 import {
   clearCart,
   removeItemFromCart,
   updateItemInCart,
 } from "@/src/services/mutate";
-import { useCart, useProductImage, useProducts } from "@/src/services/queries";
+import { useAuth, useCart, useProducts } from "@/src/services/queries";
+import {
+  removeItemFromLocalCart,
+  updateItemInLocalCart,
+  clearLocalCart,
+  getLocalCart,
+} from "@/src/utils/indexedDb";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useEffect } from "react";
 import { useRouter } from "@/src/navigation";
+import QuantitySelector from "@/src/components/QuantitySelector";
+import { Cart } from "@/src/types/types";
 
 const CartPage = () => {
-  const { data: cart, isLoading, error, mutate } = useCart();
+  const { data: remoteCart, isLoading, error, mutate } = useCart();
   const { data: productsData } = useProducts();
+  const { data: status } = useAuth();
+  const [cart, setCart] = useState<Cart | null>(null);
+  const isAuthenticated = status?.isAuthenticated;
   const products = productsData?.products;
   const router = useRouter();
+  const localCart = getLocalCart();
 
-  useEffect(() => {
-    mutate(); // This may not be necessary unless you need to force a revalidation
-  }, [mutate]);
-
-  useEffect(() => {
-    if (cart) {
-      localStorage.setItem("cartItems", JSON.stringify(cart.cartItems));
+  const fetchCart = useCallback(async () => {
+    if (isAuthenticated) {
+      setCart(remoteCart ?? null);
+    } else {
+      setCart(await localCart);
     }
-  }, [cart]);
+  }, [isAuthenticated, localCart, remoteCart]);
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  const handleClearCart = async () => {
+    if (isAuthenticated) {
+      await clearCart();
+      mutate();
+    } else {
+      await clearLocalCart();
+      setCart(null);
+    }
+  };
+
+  const handleQuantityChange = async (productId: string, newQty: number) => {
+    if (isAuthenticated) {
+      await updateItemInCart(productId, newQty);
+    } else {
+      const updatedCart = await updateItemInLocalCart(productId, newQty);
+    }
+  };
+
+  const handleRemoveItem = async (productId: string) => {
+    if (isAuthenticated) {
+      await removeItemFromCart(productId);
+      mutate();
+    } else {
+      const updatedCart = await removeItemFromLocalCart(productId);
+      setCart(updatedCart);
+    }
+  };
 
   if (isLoading) return <p className="flex-1">Loading...</p>;
   if (error) return <p className="flex-1">Error loading the cart.</p>;
 
-  const handleQuantityChange = (productId: string, newQty: number) => {
-    updateItemInCart(productId, newQty); // Assume this function is properly defined to handle API requests
-    mutate(); // Optimistically update or re-fetch data
-  };
+  const cartItems = cart?.cartItems || [];
+  const totalItems = cartItems.reduce((total, item) => total + item.qty, 0);
+  const totalPrice =
+    cartItems.length > 0
+      ? cartItems.reduce((total, item) => total + item.price * item.qty, 0)
+      : 0;
 
   return (
     <div className="responsive-container flex flex-1 flex-col items-start gap-8 py-8 lg:flex-row lg:gap-20">
       <div className="flex w-full max-w-2xl flex-col lg:flex-1">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold">
-            {cart?.cartItems.length > 0
-              ? `Your Cart: ${cart.cartItems.length} items`
+            {cartItems.length > 0
+              ? `Your Cart: ${cartItems.length} items`
               : "Your Cart is empty"}
           </h2>
-          {cart?.cartItems.length > 0 && (
+          {cartItems.length > 0 && (
             <button
-              onClick={clearCart}
+              onClick={handleClearCart}
               className="rounded bg-red-500 px-4 py-2 text-white transition duration-300 hover:bg-red-700"
             >
               Clear Cart
@@ -54,7 +97,7 @@ const CartPage = () => {
           )}
         </div>
         <div className="flex flex-col gap-6">
-          {cart.cartItems.map((item: any) => (
+          {cart?.cartItems.map((item: any) => (
             <div
               key={item.product}
               className="flex h-20 items-center justify-between rounded bg-white p-4 shadow"
@@ -78,24 +121,14 @@ const CartPage = () => {
               <div className="text-gray-500">${item.price.toFixed(2)}</div>
               <QuantitySelector
                 maxQty={item.countInStock}
+                minQty={1}
                 onQuantityChange={(newQty) => {
                   handleQuantityChange(item.product, newQty);
-                  console.log(products);
-                  console.log(
-                    products?.find(
-                      (product: any) => product._id === item.product,
-                    )?.images[0],
-                  );
-                  console.log(
-                    products?.find(
-                      (product: any) => product._id === item.product,
-                    ),
-                  );
                 }}
                 quantity={item.qty}
               />
               <button
-                onClick={() => removeItemFromCart(item.product)}
+                onClick={() => handleRemoveItem(item.product)}
                 className="text-red-500 transition duration-300 hover:text-red-700"
               >
                 <Trash2 size={20} />
@@ -108,21 +141,9 @@ const CartPage = () => {
         <h3 className="mb-3 border-b-2 pb-2 text-lg font-bold">
           Order Summary
         </h3>
-        <p>
-          Total Items:{" "}
-          {cart.cartItems.reduce(
-            (total: number, item: any) => total + item.qty,
-            0,
-          )}
-        </p>
+        <p>Total Items: {totalItems}</p>
         <p className="mb-3 border-b-2 pb-2">
-          <span>Total:</span> $
-          {cart.cartItems.reduce(
-            (total: number, item: any) => total + item.qty,
-            0,
-          ) === 0
-            ? 0
-            : cart.totalPrice.toFixed(2)}
+          <span>Total:</span> ${totalPrice.toFixed(2)}
         </p>
         <button
           className="sm:text-md mx-auto mt-4 block w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"

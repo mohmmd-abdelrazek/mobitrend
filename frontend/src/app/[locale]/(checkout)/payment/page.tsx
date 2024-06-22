@@ -2,31 +2,43 @@
 import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { axiosInstance } from "@/src/services/fetcher";
+import { ShippingDetails } from "@/src/types/types";
+import { useRouter } from "@/src/navigation";
+import { addOrder } from "@/src/services/mutate";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 const Payment = () => {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [shippingDetails, setShippingDetails] =
+    useState<ShippingDetails | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<string>("cod"); // Default to COD
+  const router = useRouter();
 
   useEffect(() => {
-    // Fetch order items and total price from your backend
+    const savedShippingDetails = localStorage.getItem("shippingDetails");
+    if (savedShippingDetails) {
+      setShippingDetails(JSON.parse(savedShippingDetails));
+    }
+
     const fetchCartItems = async () => {
       try {
-        const { data:cart } = await axiosInstance.get("/cart");
+        const { data: cart } = await axiosInstance.get("/cart");
         if (cart && cart.cartItems.length > 0) {
           const items = cart.cartItems.map((cartItem: any) => ({
             name: cartItem.name,
             price: cartItem.price,
             qty: cartItem.qty,
+            product: cartItem.product,
+            image: cartItem.image,
           }));
           const total = items.reduce(
             (acc: number, item: any) => acc + item.price * item.qty,
             0,
           );
           setCartItems(items);
-          setTotalPrice(total);
+          setTotalPrice(cart.totalPrice);
         }
       } catch (error) {
         console.error("Error fetching order items:", error);
@@ -42,8 +54,17 @@ const Payment = () => {
     event.preventDefault();
 
     if (paymentMethod === "cod") {
-      // Handle COD logic here
-      console.log("Processing Cash on Delivery");
+      const order = {
+        orderItems: cartItems,
+        shippingAddress: shippingDetails,
+        paymentMethod: "cash",
+        itemsPrice: totalPrice,
+        taxPrice: 0,
+        shippingPrice: 0,
+        totalPrice: totalPrice,
+      };
+      await addOrder(order);
+      router.push("/me/orders");
       return;
     }
 

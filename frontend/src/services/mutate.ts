@@ -1,7 +1,9 @@
 import { axiosInstance } from "./fetcher";
-import { Product, User } from "../types/types";
+import { Cart, Product, User } from "../types/types";
 import { mutate } from "swr";
 import toast from "react-hot-toast";
+import { isAxiosError } from "axios";
+import { clearLocalCart, getLocalCart } from "../utils/indexedDb";
 
 export async function createProduct(productData: Product) {
   const response = await axiosInstance.post("/product", productData);
@@ -40,23 +42,24 @@ export async function uploadImages(
   return response.data;
 }
 
-export async function uploadAvatar(
-  data: FormData,
-) {
-  const response = await axiosInstance.post(
-    "/user/upload-avatar",
-    data,
-  );
+export async function uploadAvatar(data: FormData) {
+  const response = await axiosInstance.post("/user/upload-avatar", data);
   mutate("user/avatar");
   toast.success("Avatar uploaded");
   return response.data;
 }
 
 export async function addReview(productId: string | string[], data: any) {
-  const response = await axiosInstance.post(`/review/${productId}`, data);
-  mutate(`/review/${productId}`);
-  toast.success("review added");
-  return response.data;
+  try {
+    const response = await axiosInstance.post(`/review/${productId}`, data);
+    mutate(`/review/${productId}`);
+    toast.success("review added");
+    return response.data;
+  } catch (error: unknown) {
+    if (isAxiosError(error)) {
+      toast.error(error.response?.data.message);
+    }
+  }
 }
 
 export async function deleteImage(imageUrl: string) {
@@ -69,19 +72,19 @@ export async function deleteImage(imageUrl: string) {
 
 export async function createUser(userData: User) {
   const response = await axiosInstance.post("/user", userData);
-  mutate("/user"); // Revalidate the users list after adding a new user
+  mutate("/user");
   return response.data;
 }
 
 export async function updateUser(userId: string, userData: User) {
   const response = await axiosInstance.put(`/user/${userId}`, userData);
-  mutate(`/user/${userId}`); // Revalidate the specific user
+  mutate(`/user/${userId}`);
   return response.data;
 }
 
 export async function deleteUser(userId: string) {
   const response = await axiosInstance.delete(`/user/${userId}`);
-  mutate("/user"); // Revalidate the users list after deleting
+  mutate("/user");
   return response.data;
 }
 
@@ -90,7 +93,7 @@ export const addItemToCart = async (
   qty: number,
 ) => {
   const response = await axiosInstance.post("/cart/add", { productId, qty });
-  mutate("/cart"); // Optimistically update the cache
+  mutate("/cart");
   return response.data;
 };
 
@@ -113,6 +116,19 @@ export const clearCart = async () => {
   const response = await axiosInstance.post("/cart/clear");
   mutate("/cart");
   return response.data;
+};
+
+export const mergeCart = async () => {
+  try {
+    const localCart = await getLocalCart();
+    const response = await axiosInstance.post("/cart/merge", { localCart });
+    mutate("/cart");
+    await clearLocalCart();
+    return response.data;
+  } catch (error) {
+    console.error("Error merging cart:", error);
+    throw error;
+  }
 };
 
 export async function addOrder(orderData: any) {

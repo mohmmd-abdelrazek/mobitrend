@@ -5,7 +5,7 @@ interface IReview extends Document {
     user: Types.ObjectId;     // Reference to User
     name: string;
     rating: number;
-    comment: string;
+    comment?: string;
 }
 
 const reviewSchema = new Schema<IReview>({
@@ -13,7 +13,7 @@ const reviewSchema = new Schema<IReview>({
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
-    comment: { type: String, required: true }
+    comment: { type: String, required: false }
 }, {
     timestamps: true  // Handles createdAt and updatedAt
 });

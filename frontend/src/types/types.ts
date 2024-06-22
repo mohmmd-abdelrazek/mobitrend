@@ -34,7 +34,7 @@ export interface User {
 }
 
 export interface Review {
-  id: number;
+  _id: number;
   userId: number;
   productId: number;
   name: string;
@@ -157,4 +157,22 @@ export interface ModalState {
 // Extending product type for frontend usage
 export interface ProductDetails extends Product {
   relatedProducts: Product[];
+}
+
+export interface CartItem {
+  product: string | string[];
+  name: string;
+  image: string;
+  price: number;
+  countInStock: number;
+  qty: number;
+}
+
+export interface Cart {
+  cartItems: CartItem[];
+  paymentMethod: string;
+  itemsPrice: number;
+  taxPrice: number;
+  shippingPrice: number;
+  totalPrice: number;
 }

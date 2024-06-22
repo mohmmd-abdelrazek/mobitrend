@@ -1,5 +1,5 @@
 import useSWRImmutable from "swr/immutable";
-import { Order, Product, Review, User } from "../types/types";
+import { Cart, Order, Product, Review, User } from "../types/types";
 import { useParams } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 
@@ -53,8 +53,9 @@ export function useReviews() {
 }
 
 export function useCart() {
-  return useSWRImmutable("/cart");
+  return useSWRImmutable<Cart>("/cart");
 }
+
 export function useAllOrders() {
   return useSWRImmutable<Order[]>("/order");
 }

@@ -8,7 +8,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { cn } from "../lib/utils";
+import { Star, StarIcon, StarOff } from "lucide-react";
+import { FaRegStar, FaStar } from "react-icons/fa6";
 
 type Filters = {
   categories: string[];
@@ -35,26 +36,24 @@ const FilterComponent = () => {
     setFilters({ categories, ratings, price });
   }, [searchParams]);
 
-  // Create a debounced function to update search parameters
   const debouncedUpdateFilters = useMemo(
     () =>
       debounce((newParams: URLSearchParams) => {
         router.replace(`${pathname}?${newParams.toString()}`);
-      }, 300), // Adjust debounce delay as needed
-    [pathname, router]
+      }, 300),
+    [pathname, router],
   );
 
-  // Handle updating filters, debounced to reduce frequent updates
   const handleMultiFilterChange = (
     filterType: FilterType,
     value: string,
-    isChecked: boolean
+    isChecked: boolean,
   ) => {
     const currentFilters = filters[filterType] as string[];
     const updatedFilters = isChecked
       ? [...currentFilters, value]
       : currentFilters.filter((item) => item !== value);
-    
+
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterType]: updatedFilters,
@@ -69,14 +68,25 @@ const FilterComponent = () => {
     debouncedUpdateFilters(newParams);
   };
 
-  const handleSingleFilterChange = (filterType: FilterType, value: string) => {
+  const handleSingleFilterChange = (
+    filterType: FilterType,
+    value: string,
+    isChecked: boolean,
+  ) => {
+    const updatedValue = isChecked ? value : "";
+
     setFilters((prevFilters) => ({
       ...prevFilters,
-      [filterType]: value,
+      [filterType]: updatedValue,
     }));
 
     const newParams = new URLSearchParams(searchParams);
-    newParams.set(filterType, value);
+    if (updatedValue) {
+      newParams.set(filterType, updatedValue);
+    } else {
+      newParams.delete(filterType);
+    }
+    
     debouncedUpdateFilters(newParams);
   };
 
@@ -104,7 +114,7 @@ const FilterComponent = () => {
                       handleMultiFilterChange(
                         "categories",
                         category,
-                        e.target.checked
+                        e.target.checked,
                       )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
@@ -129,19 +139,28 @@ const FilterComponent = () => {
               {["5", "4", "3", "2", "1"].map((rating) => (
                 <li key={rating} className="flex items-center">
                   <input
-                    type="radio"
+                    type="checkbox"
                     id={rating}
                     checked={filters.ratings === rating}
                     onChange={(e) =>
-                      handleSingleFilterChange("ratings", rating)
+                      handleSingleFilterChange(
+                        "ratings",
+                        rating,
+                        e.target.checked,
+                      )
                     }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                   />
                   <label
                     htmlFor={rating}
-                    className="ml-3 text-sm text-gray-600"
+                    className="ml-3 text-sm text-gray-600 flex items-center gap-1"
                   >
-                    {rating} Stars & Up
+                    {Array.from({ length: parseInt(rating) }, (_, index) => (
+                      <FaStar key={index} color="#ffc107" />
+                    ))}
+                    {Array.from({ length: 5 - parseInt(rating) }, (_, index) => (
+                      <FaStar key={index} color="#aaaaaa" />
+                    ))}
                   </label>
                 </li>
               ))}
@@ -161,7 +180,7 @@ const FilterComponent = () => {
                     id={price}
                     checked={filters.price === price}
                     onChange={(e) =>
-                      handleSingleFilterChange("price", price)
+                      handleSingleFilterChange("price", price, e.target.checked)
                     }
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                   />

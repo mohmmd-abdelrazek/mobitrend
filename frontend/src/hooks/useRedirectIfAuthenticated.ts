@@ -1,22 +1,20 @@
-// hooks/useRedirectIfAuthenticated.ts
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../services/queries";
 
-const useRedirectIfAuthenticated = (redirectUrl: string): void => {
+const useRedirectIfAuthenticated = (): void => {
   const router = useRouter();
-  const {data, isLoading} = useAuth();
-  
+  const { data, isLoading, mutate } = useAuth();
 
   useEffect(() => {
-    
-        if (data?.isAuthenticated && !isLoading) {
-          router.push(redirectUrl);
-        }
-      
-      },
-    [router, redirectUrl, data, isLoading]);
-    
+    async function redirect() {
+      await mutate();
+      if (data?.isAuthenticated && !isLoading) {
+        router.push("/");
+      }
+    }
+    redirect();
+  }, [router, data, isLoading, mutate]);
 };
 
 export default useRedirectIfAuthenticated;

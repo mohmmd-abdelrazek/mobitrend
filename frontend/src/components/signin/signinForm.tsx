@@ -9,13 +9,17 @@ import InputField from "../InputField";
 import { useRouter } from "@/src/navigation";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
+import { useSearchParams } from "next/navigation";
+import { mergeCart } from "@/src/services/mutate";
 
 const SigninForm = (texts: SigninTextProps) => {
-  useRedirectIfAuthenticated("/");
+  useRedirectIfAuthenticated();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -28,13 +32,13 @@ const SigninForm = (texts: SigninTextProps) => {
     setIsLoading(true);
 
     try {
-      const response = await axiosInstance.post("/auth/login", credentials);
+      await axiosInstance.post("/auth/login", credentials);
       setIsLoading(false);
       mutate("/auth/status");
+      mergeCart();
       mutate("/user/profile");
-      mutate("/cart");
-      router.push("/");
       toast.success("logged in successfully");
+      router.push(redirectPath ?? "/");
     } catch (error) {
       setIsLoading(false);
       if (isAxiosError(error)) {
@@ -91,6 +95,15 @@ const SigninForm = (texts: SigninTextProps) => {
           {error}
         </p>
       )}
+      <p className="mt-6 flex items-center justify-center gap-2 text-center text-sm text-gray-600">
+          {texts.donotHaveAccount}
+          <Link
+            href={redirectPath ? `/signup?redirect=${redirectPath}` : "/signup"}
+            className="font-medium text-orange-600 hover:text-orange-500 hover:underline"
+          >
+            {texts.createAccount}
+          </Link>
+        </p>
     </form>
   );
 };

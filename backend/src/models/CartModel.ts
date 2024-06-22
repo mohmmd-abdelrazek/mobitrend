@@ -14,8 +14,7 @@ interface CartModel {
 }
 
 interface ICart extends Document, CartModel {
-    user?: Types.ObjectId;  // User reference is now optional
-    sessionId?: string;  // For carts not linked to a user
+    user: Types.ObjectId;  // User reference is now optional
     cartItems: ICartItem[];
     paymentMethod: string;
     itemsPrice: number;
@@ -41,9 +40,8 @@ const cartSchema = new Schema<ICart>({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: false
+        required: true
     },
-    sessionId: { type: String, required: false }, // Session ID if not logged in
     cartItems: [cartItemSchema],
     paymentMethod: { type: String },
     itemsPrice: { type: Number, required: true, default: 0 },

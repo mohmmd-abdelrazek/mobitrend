@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import OrderModel from "../models/OrderModel";
+import CartModel from "../models/CartModel";
 
 // Place a new order
 export const addOrder = async (req: Request, res: Response) => {
@@ -31,6 +32,20 @@ export const addOrder = async (req: Request, res: Response) => {
     });
 
     const createdOrder = await order.save();
+
+    const userId = req.user?._id;
+
+    await CartModel.findOneAndUpdate(
+      { user: userId },
+      {
+        cartItems: [],
+        itemsPrice: 0,
+        taxPrice: 0,
+        shippingPrice: 0,
+        totalPrice: 0,
+      }
+    );
+
     res.status(201).json(createdOrder);
   } catch (error) {
     res.status(500).json({ message: "Failed to create order", error });
@@ -103,7 +118,7 @@ export const getMyOrders = async (req: Request, res: Response) => {
   const userId = req.user?._id;
 
   if (!userId) {
-    console.log('User ID is not available.');
+    console.log("User ID is not available.");
     res.status(400).json({ message: "User not authenticated" });
     return;
   }

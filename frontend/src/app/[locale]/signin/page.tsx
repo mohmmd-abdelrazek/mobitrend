@@ -33,15 +33,7 @@ function Signin() {
           ></Image>
         </div>
         <SigninForm {...texts} />
-        <p className="mt-6 flex items-center justify-center gap-2 text-center text-sm text-gray-600">
-          {texts.donotHaveAccount}
-          <Link
-            href="/signup"
-            className="font-medium text-orange-600 hover:text-orange-500 hover:underline"
-          >
-            {texts.createAccount}
-          </Link>
-        </p>
+        
       </div>
     </div>
   );

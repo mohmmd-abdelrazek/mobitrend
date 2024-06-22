@@ -10,12 +10,12 @@ const findCartItemIndex = (cartItems: ICartItem[], productId: string) => {
 // Add item to cart
 export const addItemToCart = async (req: Request, res: Response) => {
   const { productId, qty } = req.body;
-  const userId = req.user ? req.user._id : req.session.cartId;
+  const userId = req.user?._id;
 
   try {
     const cart =
       (await CartModel.findOne({ user: userId })) ||
-      new CartModel({ user: userId, sessionId: userId });
+      new CartModel({ user: userId });
     const product = await ProductModel.findById(productId);
 
     if (!product) {
@@ -52,7 +52,7 @@ export const addItemToCart = async (req: Request, res: Response) => {
 // Remove item from cart
 export const removeItemFromCart = async (req: Request, res: Response) => {
   const { productId } = req.body;
-  const userId = req.user ? req.user._id : req.session.cartId;
+  const userId = req.user?._id;
 
   try {
     const cart = await CartModel.findOne({ user: userId });
@@ -75,7 +75,7 @@ export const removeItemFromCart = async (req: Request, res: Response) => {
 // Update item quantity in cart
 export const updateItemInCart = async (req: Request, res: Response) => {
   const { productId, qty } = req.body;
-  const userId = req.user ? req.user._id : req.session.cartId;
+  const userId = req.user?._id;
 
   try {
     const cart = await CartModel.findOne({ user: userId });
@@ -99,14 +99,20 @@ export const updateItemInCart = async (req: Request, res: Response) => {
 
 // Get cart for user
 export const getCart = async (req: Request, res: Response) => {
-  const userId = req.user ? req.user._id : req.session.cartId;
+  const userId = req.user?._id;
 
   try {
     const cart = await CartModel.findOne({ user: userId });
     if (cart) {
       res.json(cart);
     } else {
-      res.status(404).json({ message: "Cart not found" });
+      const cart =
+        (await CartModel.findOne({ user: userId })) ||
+        new CartModel({ user: userId });
+
+      cart.calculateTotal();
+      await cart.save();
+      res.status(201).json(cart);
     }
   } catch (error) {
     res.status(500).json({ message: "Error fetching cart", error });
@@ -115,7 +121,7 @@ export const getCart = async (req: Request, res: Response) => {
 
 // Clear all items from the cart
 export const clearCart = async (req: Request, res: Response) => {
-  const userId = req.user ? req.user._id : req.session.cartId;
+  const userId = req.user?._id;
 
   try {
     const cart = await CartModel.findOne({ user: userId });
@@ -135,10 +141,46 @@ export const clearCart = async (req: Request, res: Response) => {
   }
 };
 
-export default {
-  addItemToCart,
-  removeItemFromCart,
-  updateItemInCart,
-  getCart,
-  clearCart,
+const mergeCartItems = (
+  userCartItems: ICartItem[],
+  localCartItems: ICartItem[]
+): ICartItem[] => {
+  localCartItems.forEach((localItem) => {
+    const userCartItemIndex = findCartItemIndex(
+      userCartItems,
+      localItem.product.toString()
+    );
+    if (userCartItemIndex > -1) {
+      userCartItems[userCartItemIndex].qty += localItem.qty;
+    } else {
+      userCartItems.push(localItem);
+    }
+  });
+  return userCartItems;
+};
+
+export const mergeCarts = async (req: Request, res: Response) => {
+  const userId = req.user?._id;
+  const localCart = req.body.localCart;
+
+  try {
+    const userCart = await CartModel.findOne({ user: userId });
+
+    if (localCart && userCart) {
+      userCart.cartItems = mergeCartItems(
+        userCart.cartItems,
+        localCart.cartItems
+      );
+      userCart.calculateTotal();
+      await userCart.save();
+
+      res
+        .status(200)
+        .json({ message: "Carts merged successfully", cart: userCart });
+    } else {
+      res.status(404).json({ message: "No carts to merge" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error merging carts", error });
+  }
 };

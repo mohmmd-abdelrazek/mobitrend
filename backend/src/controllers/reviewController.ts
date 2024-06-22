@@ -6,7 +6,7 @@ import ProductModel from "../models/ProductModel";
 export const addReview = async (req: Request, res: Response) => {
   const {productId} = req.params;
   const { rating, comment } = req.body;
-  const user = req.user; // Assuming user is added to req by authentication middleware
+  const user = req.user; 
 
   try {
     const existingReview = await ReviewModel.findOne({
@@ -29,12 +29,12 @@ export const addReview = async (req: Request, res: Response) => {
     });
     await review.save();
 
-    await ProductModel.updateAverageRating(productId); // Update the product's average rating
+    await ProductModel.updateAverageRating(productId);
 
     res.status(201).json(review);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.log(error.message); // Now safely accessing error.message
+      console.log(error.message);
     } else {
       console.log("An unexpected error occurred");
     }

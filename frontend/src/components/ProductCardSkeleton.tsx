@@ -1,24 +1,18 @@
 import Image from "next/image"
+import { Card } from "./ui/card"
 
 
 const ProductCardSkeleton = () => {
   return (
-    <div className="flex h-72 flex-col rounded-lg border p-4 shadow transition-shadow duration-300 hover:shadow-lg">
-      <div className="relative aspect-square w-full">
-        <Image
-          src="https://res.cloudinary.com/dhliba9i5/image/upload/v1714169979/products/default-placeholder_r9thjf.png"
-          alt="default"
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 30vw"
-          priority
-          className="rounded-md object-cover object-center"
-        />
+    <Card className="flex h-72 w-full flex-col p-4 animate-pulse">
+      <div className="relative w-full aspect-square bg-gray-300 rounded-md" />
+      <div className="flex-1 mt-2">
+        <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+        <div className="h-4 bg-gray-300 rounded w-1/2 mb-2"></div>
       </div>
-      <h3 className="mt-2 flex-1 overflow-hidden text-ellipsis text-md font-bold">
-      <div className="w-full h-full bg-gray-200" />
-      </h3>
-      <div className="w-full h-full bg-gray-200" />
-    </div>
+      <div className="h-4 bg-gray-300 rounded w-1/3 mt-2"></div>
+      <div className="my-1 h-6 bg-gray-300 rounded w-1/2"></div>
+    </Card>
   )
 }
 

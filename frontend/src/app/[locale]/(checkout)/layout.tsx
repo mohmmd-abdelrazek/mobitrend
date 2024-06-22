@@ -1,11 +1,7 @@
+"use client"
 import CheckoutBreadcrumb from "@/src/components/CheckoutBreadCrump";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbSeparator,
-} from "@/src/components/ui/breadcrumb";
+
+import withAuth from "@/src/utils/withAuth";
 
 const AdminPanel = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -18,4 +14,4 @@ const AdminPanel = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default AdminPanel;
+export default withAuth(AdminPanel);

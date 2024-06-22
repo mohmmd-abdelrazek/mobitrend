@@ -10,7 +10,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
   interface QueryParams {
     categories?: string;
     ratings?: string;
-    priceRange?: string;
+    price?: string;
     keyword?: string;
   }
 
@@ -34,8 +34,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
       filter.rating = { $gte: Math.min(...ratings) };
     }
 
-    if (query.priceRange) {
-      const [min, max] = query.priceRange.split("-").map(Number);
+    if (query.price) {
+      const [min, max] = query.price.split("-").map(Number);
       filter.price = { $gte: min, $lte: max };
     }
 

@@ -10,6 +10,7 @@ import Image from "next/legacy/image";
 import signinIcon from "@/src/assest/signin.gif";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
+import { useSearchParams } from "next/navigation";
 
 const SignupForm = (texts: SignupTextProps) => {
   const [formData, setFormData] = useState({
@@ -25,6 +26,8 @@ const SignupForm = (texts: SignupTextProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignupEnabled, setIsSignupEnabled] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectPath = searchParams.get("redirect");
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setCode(e.target.value);
@@ -109,21 +112,21 @@ const SignupForm = (texts: SignupTextProps) => {
         });
 
         if (signinResponse.data.success) {
-          mutate("/auth/status");
-          router.push("/");
+          await mutate("/auth/status");
+          await mutate("/user/profile");
+          await mer;
+          await mutate("/cart");
+          router.push(redirectPath ?? "/");
           toast.success("signed in successfully");
         } else {
-          // Handle case where login fails
           toast.error("Automatic login failed. Please try to log in manually.");
           setErrors([signinResponse.data.message || "Automatic login failed."]);
         }
       } else {
-        // Handle unsuccessful signup
         toast.error(response.data.message || "Signup failed.");
         setErrors([response.data.message || "Signup failed."]);
       }
     } catch (error) {
-      // Generic error handling
       if (isAxiosError(error) && error.response) {
         setErrors([
           error.response.data.error ||
@@ -138,7 +141,7 @@ const SignupForm = (texts: SignupTextProps) => {
         toast.error("An unexpected error occurred. Please try again.");
       }
     } finally {
-      setIsLoading(false); // Ensure loading state is cleared
+      setIsLoading(false);
     }
   };
 
@@ -147,7 +150,7 @@ const SignupForm = (texts: SignupTextProps) => {
       onSubmit={handleSubmit}
       className="w-full max-w-md space-y-6 rounded-md bg-white sm:max-w-md sm:px-4"
     >
-      <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-full">
+      {/* <div className="relative mx-auto h-20 w-20 overflow-hidden rounded-full">
         <div>
           <Image
             className="rounded-full"
@@ -160,7 +163,7 @@ const SignupForm = (texts: SignupTextProps) => {
           Upload Photo
         </div>
         <input type="file" className="hidden" />
-      </div>
+      </div> */}
       <InputField
         id="name"
         name="name"
