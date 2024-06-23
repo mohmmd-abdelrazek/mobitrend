@@ -34,7 +34,7 @@ const SigninForm = (texts: SigninTextProps) => {
     try {
       await axiosInstance.post("/auth/login", credentials);
       setIsLoading(false);
-      mutate("/auth/status");
+      await mutate("/auth/status");
       mergeCart();
       mutate("/user/profile");
       toast.success("logged in successfully");

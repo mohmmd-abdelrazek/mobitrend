@@ -146,8 +146,9 @@ const CartPage = () => {
           <span>Total:</span> ${totalPrice.toFixed(2)}
         </p>
         <button
-          className="sm:text-md mx-auto mt-4 block w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50"
+          className="sm:text-md mx-auto mt-4 block w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-bold text-white transition duration-150 ease-in-out hover:scale-105 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={() => router.push("/shipping")}
+          disabled={cartItems.length < 1}
         >
           Check Out
         </button>

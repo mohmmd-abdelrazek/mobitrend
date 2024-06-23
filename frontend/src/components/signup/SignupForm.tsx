@@ -113,7 +113,7 @@ const SignupForm = (texts: SignupTextProps) => {
         });
 
         if (signinResponse.data.success) {
-          mutate("/auth/status");
+          await mutate("/auth/status");
           mergeCart();
           mutate("/user/profile");
           router.push(redirectPath ?? "/");
