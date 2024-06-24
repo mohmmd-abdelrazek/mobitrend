@@ -6,7 +6,9 @@ import { ShippingDetails } from "@/src/types/types";
 import { useRouter } from "@/src/navigation";
 import { addOrder } from "@/src/services/mutate";
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+const stripePromise = loadStripe(
+  pk_test_51PNfK007DRS2e9ECEw8OjmPXhkZkTynaSdX7VkBpBBuqlxetzy2ephGKh3xLCcwoAd2WC10oQkP5vMHr5LHO3M9n00tjP4zoDA!,
+);
 
 const Payment = () => {
   const [cartItems, setCartItems] = useState<any[]>([]);
