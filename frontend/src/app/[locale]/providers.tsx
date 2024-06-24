@@ -19,7 +19,7 @@ export const StripeProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     loadStripe(
-      pk_test_51PNfK007DRS2e9ECEw8OjmPXhkZkTynaSdX7VkBpBBuqlxetzy2ephGKh3xLCcwoAd2WC10oQkP5vMHr5LHO3M9n00tjP4zoDA!,
+      "pk_test_51PNfK007DRS2e9ECEw8OjmPXhkZkTynaSdX7VkBpBBuqlxetzy2ephGKh3xLCcwoAd2WC10oQkP5vMHr5LHO3M9n00tjP4zoDA",
     ).then(setStripe);
   }, []);
 
