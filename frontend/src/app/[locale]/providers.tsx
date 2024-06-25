@@ -18,9 +18,7 @@ export const StripeProvider = ({ children }: { children: React.ReactNode }) => {
   const [stripe, setStripe] = useState<Stripe | null>(null);
 
   useEffect(() => {
-    loadStripe(
-      "pk_test_51PNfK007DRS2e9ECEw8OjmPXhkZkTynaSdX7VkBpBBuqlxetzy2ephGKh3xLCcwoAd2WC10oQkP5vMHr5LHO3M9n00tjP4zoDA",
-    ).then(setStripe);
+    loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!).then(setStripe);
   }, []);
 
   if (!stripe) return null;
