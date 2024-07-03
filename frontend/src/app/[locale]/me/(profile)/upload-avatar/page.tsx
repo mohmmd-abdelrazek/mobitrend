@@ -49,7 +49,15 @@ const UploadAvatar = () => {
       <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
         <div className="flex gap-4">
           <div className="h-16 w-16">
-            {user?.profile_picture_url ? (
+            {file ? (
+              <Image
+                src={URL.createObjectURL(file)}
+                alt="Avatar"
+                width={64}
+                height={64}
+                className="mr-4 rounded-full"
+              />
+            ) : user?.profile_picture_url ? (
               <Image
                 src={user.profile_picture_url}
                 alt="Avatar"

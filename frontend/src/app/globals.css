@@ -1,7 +1,11 @@
+/* Normalize.css to ensure consistent baseline styling across browsers */
+@import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Custom CSS Variables */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,26 +70,35 @@
   }
 }
 
+/* Global Styles */
 @layer base {
-  * {
-    @apply border-border;
+  html {
+    font-size: 16px;
   }
+
+  *,
+  *::before,
+  *::after {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
   body {
     @apply bg-background text-foreground;
   }
-  * {
-    box-sizing: border-box;
-  }
+
   h1 {
     @apply py-2 text-xl font-bold leading-none tracking-tight text-gray-900 dark:text-white md:text-2xl lg:text-3xl;
   }
+
   h2 {
     @apply py-1 text-lg font-semibold leading-none tracking-tight text-gray-700 dark:text-white md:text-xl lg:text-2xl;
   }
+
   .dynamic-grid {
     display: grid;
     grid-gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 
   .small-dynamic-grid {
@@ -93,67 +106,63 @@
     grid-gap: 1rem;
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
+}
 
+/* Responsive Containers */
+@layer base {
   .responsive-container {
     padding-left: 1rem;
     padding-right: 1rem;
 
-    /* Responsive padding */
     @media (min-width: 640px) {
-      /* sm */
       padding-left: 2rem;
       padding-right: 2rem;
     }
 
     @media (min-width: 768px) {
-      /* md */
       padding-left: 4rem;
       padding-right: 4rem;
     }
 
     @media (min-width: 1024px) {
-      /* lg */
       padding-left: 6rem;
       padding-right: 6rem;
     }
 
     @media (min-width: 1280px) {
-      /* xl */
       padding-left: 8rem;
       padding-right: 8rem;
     }
   }
 
-  .small-responsive-container {
+  .small-container {
     padding-left: 1rem;
     padding-right: 1rem;
 
-    /* Responsive padding */
     @media (min-width: 640px) {
-      /* sm */
       padding-left: 5rem;
       padding-right: 5rem;
     }
 
     @media (min-width: 768px) {
-      /* md */
       padding-left: 10rem;
       padding-right: 10rem;
     }
 
     @media (min-width: 1024px) {
-      /* lg */
       padding-left: 12rem;
       padding-right: 12rem;
     }
 
     @media (min-width: 1280px) {
-      /* xl */
       padding-left: 15rem;
       padding-right: 15rem;
     }
   }
+}
 
+/* Text Direction */
+@layer base {
   .rtl {
     @media (min-width: 640px) {
       direction: rtl;
@@ -165,7 +174,10 @@
       direction: ltr;
     }
   }
+}
 
+/* Custom Scrollbars */
+@layer base {
   .team-list::-webkit-scrollbar {
     width: 6px;
     height: 8px;

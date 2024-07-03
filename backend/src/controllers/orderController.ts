@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import OrderModel from "../models/OrderModel";
 import CartModel from "../models/CartModel";
+import ProductModel from "../models/ProductModel";
 
-// Place a new order
 export const addOrder = async (req: Request, res: Response) => {
   const {
     orderItems,
@@ -14,10 +14,12 @@ export const addOrder = async (req: Request, res: Response) => {
     totalPrice,
   } = req.body;
 
-  if (orderItems && orderItems.length === 0) {
-    res.status(400).json({ message: "No order items" });
-    return;
+  if (!orderItems || orderItems.length === 0) {
+    return res.status(400).json({ message: "No order items" });
   }
+
+  const session = await OrderModel.startSession();
+  session.startTransaction();
 
   try {
     const order = new OrderModel({
@@ -31,10 +33,26 @@ export const addOrder = async (req: Request, res: Response) => {
       totalPrice,
     });
 
-    const createdOrder = await order.save();
+    const createdOrder = await order.save({ session });
 
+    // Update product stock
+    for (const item of orderItems) {
+      const product = await ProductModel.findById(item.product);
+
+      if (!product) {
+        throw new Error(`Product not found: ${item.product}`);
+      }
+
+      if (product.inStock < item.qty) {
+        throw new Error(`Not enough stock for product: ${item.product}`);
+      }
+
+      product.inStock -= item.qty;
+      await product.save({ session });
+    }
+
+    // Clear the cart
     const userId = req.user?._id;
-
     await CartModel.findOneAndUpdate(
       { user: userId },
       {
@@ -43,11 +61,17 @@ export const addOrder = async (req: Request, res: Response) => {
         taxPrice: 0,
         shippingPrice: 0,
         totalPrice: 0,
-      }
+      },
+      { session }
     );
+
+    await session.commitTransaction();
+    session.endSession();
 
     res.status(201).json(createdOrder);
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     res.status(500).json({ message: "Failed to create order", error });
   }
 };

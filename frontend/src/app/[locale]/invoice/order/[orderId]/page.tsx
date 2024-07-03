@@ -15,7 +15,7 @@ const OrderInvoice = () => {
   if (error) return <div>Failed to load order</div>;
 
   return (
-    <div className="small-responsive-container py-2">
+    <div className="small-container py-2">
       <div ref={componentRef} className="p-4">
         <h1 className="mb-4 text-2xl font-bold">Invoice #{order?._id}</h1>
         <div className="mb-4">

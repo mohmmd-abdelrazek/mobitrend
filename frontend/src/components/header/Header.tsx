@@ -27,8 +27,8 @@ export const Header = () => {
       >
         {t("logo")}
       </Link>
+      <div className="flex flex-1 justify-end items-center gap-4 sm:gap-8 font-semibold">
       <SearchBar />
-      <div className="flex items-center gap-8 font-semibold">
         <Link
           href="/cart"
           className="relative cursor-pointer text-xl text-white"

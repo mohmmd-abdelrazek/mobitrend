@@ -272,15 +272,19 @@ export async function handleStripeWebhook(
 
           return {
             name: item.description,
-            qty: item.quantity,
+            qty: item.quantity || 0,
             image: image,
             price: item.amount_total / 100,
-            product: product ? product._id : new Types.ObjectId(), // Use product ID if available, else create a placeholder
+            product: product ? product._id : new Types.ObjectId(),
           };
         })
       );
 
+      const mongoSession = await OrderModel.startSession();
+
       try {
+        mongoSession.startTransaction();
+
         const order = new OrderModel({
           user: new Types.ObjectId(userId),
           orderItems,
@@ -309,8 +313,25 @@ export async function handleStripeWebhook(
           isDelivered: false,
         });
 
-        await order.save();
+        await order.save({ session: mongoSession });
 
+        // Update product stock
+        for (const item of orderItems) {
+          const product = await ProductModel.findById(item.product).session(mongoSession);
+
+          if (!product) {
+            throw new Error(`Product not found: ${item.product}`);
+          }
+
+          if (product.inStock < item.qty) {
+            throw new Error(`Not enough stock for product: ${item.product}`);
+          }
+
+          product.inStock -= item.qty;
+          await product.save({ session: mongoSession });
+        }
+
+        // Clear the cart
         await CartModel.findOneAndUpdate(
           { user: userId },
           {
@@ -319,12 +340,18 @@ export async function handleStripeWebhook(
             taxPrice: 0,
             shippingPrice: 0,
             totalPrice: 0,
-          }
+          },
+          { session: mongoSession }
         );
+
+        await mongoSession.commitTransaction();
+        mongoSession.endSession();
 
         res.status(200).json({ received: true });
       } catch (error) {
         console.error("Error saving order:", error);
+        await mongoSession.abortTransaction();
+        mongoSession.endSession();
         res.status(500).json({ message: "Failed to create order", error });
       }
     } else {
