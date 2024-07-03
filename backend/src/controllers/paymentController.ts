@@ -175,7 +175,6 @@ export class PaymentController {
             currency: "usd",
             product_data: {
               name: item.name,
-              images: [item.image],
               metadata: {
                 productId: item.product,
               },
@@ -191,7 +190,7 @@ export class PaymentController {
         client_reference_id: userId,
         metadata: {
           userId: userId?.toString(),
-          siteName: "Your Site Name",
+          siteName: "Mobitrend",
         },
         billing_address_collection: "required",
         shipping_address_collection: {
@@ -258,25 +257,32 @@ export async function handleStripeWebhook(
       const userId = session.metadata.userId;
       const paymentIntentId = session.payment_intent as string;
       const lineItems = await stripe.checkout.sessions.listLineItems(
-        session.id
+        session.id, {expand: ["data.price.product"],}
       );
+      console.log(lineItems.data[0].price);
 
       const orderItems = await Promise.all(
         lineItems.data.map(async (item) => {
-          const productId = item.price?.metadata.productId as string;
-          const product = await ProductModel.findById(productId);
-          const image =
-            product && product.images.length > 0
+          const productData = item.price?.product;
+
+          // Check if productData is of type Stripe.Product and has metadata
+          if (typeof productData !== 'string' && !productData?.deleted && productData?.metadata) {
+            const productId = productData.metadata.productId;
+            const product = await ProductModel.findById(productId);
+            const image = product && product.images.length > 0
               ? product.images[0]
               : "https://res.cloudinary.com/dhliba9i5/image/upload/v1714169979/products/default-placeholder_r9thjf.png";
 
-          return {
-            name: item.description,
-            qty: item.quantity || 0,
-            image: image,
-            price: item.amount_total / 100,
-            product: product ? product._id : new Types.ObjectId(),
-          };
+            return {
+              name: item.description,
+              qty: item.quantity || 0,
+              image: image,
+              price: item.amount_total / 100,
+              product: product ? product._id : new Types.ObjectId(),
+            };
+          } else {
+            throw new Error(`Product not found or invalid: ${item.price?.product}`);
+          }
         })
       );
 
@@ -317,7 +323,9 @@ export async function handleStripeWebhook(
 
         // Update product stock
         for (const item of orderItems) {
-          const product = await ProductModel.findById(item.product).session(mongoSession);
+          const product = await ProductModel.findById(item.product).session(
+            mongoSession
+          );
 
           if (!product) {
             throw new Error(`Product not found: ${item.product}`);

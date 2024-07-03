@@ -81,7 +81,7 @@ const ProductPage = () => {
   if (error) return <div>Failed to load product.</div>;
   return (
     <div className="lg:small-container large-container flex flex-col gap-4">
-      <div className="flex flex-1 flex-col items-center gap-12 py-4 md:flex-row md:items-start md:justify-between">
+      <div className="flex flex-1 flex-col items-center gap-12 py-4 md:flex-row md:items-start md:justify-center">
         <ImageGallery />
         <div className="flex flex-col gap-4 lg:col-span-2">
           <div>
