@@ -9,7 +9,7 @@ const AdminPanel = ({ children }: { children: ReactNode }) => {
         { href: "/me/update-password", label: "Update Password", icon: "🔒" },
       ];
   return (
-    <div className="responsive-container flex flex-1 flex-col gap-8">
+    <div className="large-container flex flex-1 flex-col gap-8">
       <h2 className="text-center">
         User Settings
       </h2>

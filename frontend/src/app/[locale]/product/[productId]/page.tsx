@@ -80,7 +80,7 @@ const ProductPage = () => {
   if (isLoading) return <div className="flex-1">Loading...</div>;
   if (error) return <div>Failed to load product.</div>;
   return (
-    <div className="lg:small-container responsive-container flex flex-col gap-4">
+    <div className="lg:small-container large-container flex flex-col gap-4">
       <div className="flex flex-1 flex-col items-center gap-12 py-4 md:flex-row md:items-start md:justify-between">
         <ImageGallery />
         <div className="flex flex-col gap-4 lg:col-span-2">

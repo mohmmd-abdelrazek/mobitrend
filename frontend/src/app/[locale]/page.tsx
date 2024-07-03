@@ -16,7 +16,7 @@ const HomePage = () => {
   const { data } = useProducts();
 
   return (
-    <div className="responsive-container flex flex-1 flex-col gap-2">
+    <div className="large-container flex flex-1 flex-col gap-2">
       {!keyword && <PromotionBanner />}
       <div className="flex w-full flex-1 gap-8">
         {keyword && (

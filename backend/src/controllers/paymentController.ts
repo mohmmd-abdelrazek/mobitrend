@@ -185,8 +185,8 @@ export class PaymentController {
           quantity: item.qty,
         })),
         mode: "payment",
-        success_url: `http://localhost:3000/me/orders`,
-        cancel_url: "http://localhost:3000",
+        success_url: `${process.env.SITE_URL}/me/orders`,
+        cancel_url: process.env.SITE_URL,
         customer_email: userEmail,
         client_reference_id: userId,
         metadata: {

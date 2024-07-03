@@ -79,7 +79,7 @@ const CartPage = () => {
       : 0;
 
   return (
-    <div className="responsive-container flex flex-1 flex-col items-start gap-8 py-8 lg:flex-row lg:gap-20">
+    <div className="large-container flex flex-1 flex-col items-start gap-8 py-8 lg:flex-row lg:gap-20">
       <div className="flex w-full max-w-2xl flex-col lg:flex-1">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold">

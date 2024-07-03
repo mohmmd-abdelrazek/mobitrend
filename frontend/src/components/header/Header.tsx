@@ -20,7 +20,7 @@ export const Header = () => {
   };
 
   return (
-    <header className="responsive-container flex items-center justify-between bg-orange-950 py-2 shadow-sm md:sticky md:top-0 md:z-10">
+    <header className="large-container flex items-center justify-between bg-orange-950 py-2 shadow-sm md:sticky md:top-0 md:z-10">
       <Link
         href="/"
         className="text-md px-2 py-1 font-extrabold text-white transition-colors hover:text-gray-100"

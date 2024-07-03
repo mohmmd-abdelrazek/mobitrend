@@ -11,7 +11,7 @@ const AdminPanel = ({ children }: { children: ReactNode }) => {
     { href: "/admin/reviews", label: "Reviews", icon: "⭐" },
   ];
   return (
-    <div className="responsive-container flex flex-1 flex-col gap-8">
+    <div className="large-container flex flex-1 flex-col gap-8">
       <h2 className="text-center">
         Admin Dashboard
       </h2>

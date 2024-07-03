@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 const Footer = () => {
   const t = useTranslations("footer");
   return (
-    <footer className="flex py-2 resposive-container items-center justify-center responsive-container text-slate-500">
+    <footer className="flex py-2 resposive-container items-center justify-center large-container text-slate-500">
       <div className="text-sm">
       {t("copyright", { year: new Date().getFullYear() })}
       </div>

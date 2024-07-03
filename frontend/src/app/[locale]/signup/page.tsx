@@ -23,7 +23,7 @@ const Signup = () => {
   };
 
   return (
-    <div className="responsive-container flex flex-1 items-center justify-center bg-gray-100 py-6">
+    <div className="large-container flex flex-1 items-center justify-center bg-gray-100 py-6">
       <div className="w-full max-w-sm space-y-4 rounded-md bg-white p-6 shadow-md sm:max-w-md sm:p-8">
         <h2 className="text-center text-xl font-semibold text-gray-800 sm:text-2xl">
           {texts.createAccount}

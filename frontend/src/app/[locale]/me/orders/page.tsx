@@ -22,7 +22,7 @@ const MyOrdersPage = () => {
   }
 
   return (
-    <div className="flex responsive-container flex-1 w-full flex-col">
+    <div className="flex large-container flex-1 w-full flex-col">
       <h1 className="my-4 text-xl font-bold sm:text-2xl">
         {orders?.length ? `Number of orders: ${orders.length}` : "No orders found"}
       </h1>
