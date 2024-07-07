@@ -37,11 +37,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <h3 className="text-md mt-2 line-clamp-2 w-full overflow-hidden text-ellipsis p-0 font-bold">
           {product.name}
         </h3>
+      <p className="text-sm font-bold text-gray-600">${product.price}</p>
       </div>
       <Rating value={product.rating} numReviews={product.numReviews} />
       <Link
         href={`/product/${product._id}`}
-        className="my-1 inline-block rounded bg-orange-500 px-2 py-1 text-center text-xs font-bold text-white hover:bg-orange-600"
+        className="mt-2 inline-block rounded bg-orange-500 px-2 py-1 text-center text-xs font-bold text-white hover:bg-orange-600"
       >
         View Details
       </Link>

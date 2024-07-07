@@ -24,47 +24,57 @@ const ShippingInfo = () => {
   };
 
   return (
-    <div>
-      <h1>Shipping Information</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          name="name"
-          placeholder="Name"
-          value={shippingDetails.name}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          name="address"
-          placeholder="Address"
-          value={shippingDetails.address}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          name="city"
-          placeholder="City"
-          value={shippingDetails.city}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          name="postalCode"
-          placeholder="Postal Code"
-          value={shippingDetails.postalCode}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          name="country"
-          placeholder="Country"
-          value={shippingDetails.country}
-          onChange={handleInputChange}
-          required
-        />
-        <button type="submit">Continue to Confirm Order</button>
-      </form>
-    </div>
+      <div className="w-full max-w-md bg-white rounded-lg shadow-md">
+        <h1 className="text-2xl font-bold text-center mb-6">Shipping Information</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            name="name"
+            placeholder="Name"
+            value={shippingDetails.name}
+            onChange={handleInputChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+          />
+          <input
+            name="address"
+            placeholder="Address"
+            value={shippingDetails.address}
+            onChange={handleInputChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+          />
+          <input
+            name="city"
+            placeholder="City"
+            value={shippingDetails.city}
+            onChange={handleInputChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+          />
+          <input
+            name="postalCode"
+            placeholder="Postal Code"
+            value={shippingDetails.postalCode}
+            onChange={handleInputChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+          />
+          <input
+            name="country"
+            placeholder="Country"
+            value={shippingDetails.country}
+            onChange={handleInputChange}
+            required
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring focus:ring-blue-200"
+          />
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300"
+          >
+            Continue to Confirm Order
+          </button>
+        </form>
+      </div>
   );
 };
 

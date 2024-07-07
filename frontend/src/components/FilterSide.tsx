@@ -8,8 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./ui/accordion";
-import { Star, StarIcon, StarOff } from "lucide-react";
-import { FaRegStar, FaStar } from "react-icons/fa6";
+import { FaStar } from "react-icons/fa6";
 
 type Filters = {
   categories: string[];
@@ -104,7 +103,7 @@ const FilterComponent = () => {
           </AccordionTrigger>
           <AccordionContent className="pt-2">
             <ul className="space-y-2">
-              {["electronics", "books", "clothing"].map((category) => (
+              {["mobiles", "airpodes", "watches"].map((category) => (
                 <li key={category} className="flex items-center">
                   <input
                     type="checkbox"
@@ -123,7 +122,7 @@ const FilterComponent = () => {
                     htmlFor={category}
                     className="ml-3 text-sm text-gray-600"
                   >
-                    {category}
+                    {category.toUpperCase()}
                   </label>
                 </li>
               ))}

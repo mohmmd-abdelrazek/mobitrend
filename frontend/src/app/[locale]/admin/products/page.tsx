@@ -60,7 +60,8 @@ const AdminProductsPage = () => {
                 <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
                   {product.inStock}
                 </td>
-                <td className="flex gap-2 border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
+                <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
+                  <div className="flex gap-2 items-center">
                   <Link
                     href={`/admin/products/${product._id}/update`}
                     className="rounded-md border-2 border-orange-500 p-1 text-orange-500 hover:bg-orange-500 hover:text-white"
@@ -82,6 +83,7 @@ const AdminProductsPage = () => {
                   >
                     <FaTrashAlt />
                   </button>
+                  </div>
                 </td>
               </tr>
             ))}

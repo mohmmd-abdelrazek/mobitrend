@@ -5,6 +5,7 @@ import { Link } from "@/src/navigation";
 import { Eye, Printer } from "lucide-react";
 import { useEffect } from "react";
 import { mutate } from "swr";
+import LoadingIndicator from "@/src/components/LoadingIndicator";
 
 const MyOrdersPage = () => {
   const { data: orders, isLoading, error, mutate: mutateOrders } = useMyOrders();
@@ -15,7 +16,7 @@ const MyOrdersPage = () => {
   }, [mutateOrders])
   
 
-  if (isLoading) return <div className="flex-1">Loading...</div>;
+  if (isLoading) return <div className="flex-1 flex justify-center items-center"><LoadingIndicator w={4} d={4} /></div>;
   if (error) {
     console.error('Error fetching orders:', error);
     return <div className="flex-1">{error.message}</div>;

@@ -134,15 +134,40 @@ export const updateProduct = async (req: Request, res: Response) => {
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    await cloudinary.api.delete_resources_by_prefix(`products/${id}`);
-    await cloudinary.api.delete_folder(`products/${id}`);
-    const product = await ProductModel.findByIdAndDelete(id);
+
+    const product = await ProductModel.findById(id);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
+
+    try {
+      const resources = await cloudinary.api.resources({
+        type: "upload",
+        prefix: `products/${id}`,
+      });
+
+      if (resources.resources.length > 0) {
+        await cloudinary.api.delete_resources_by_prefix(`products/${id}`);
+      }
+    } catch (error) { /* empty */ }
+    
+
+    try {
+      const folderInfo = await cloudinary.api.sub_folders("products");
+      const folderExists = folderInfo.folders.some(
+        (folder: { path: string }) => folder.path === `products/${id}`
+      );
+
+      if (folderExists) {
+        await cloudinary.api.delete_folder(`products/${id}`);
+      }
+    } catch (error) { /* empty */ }
+
+    await ProductModel.findByIdAndDelete(id);
+
     res.status(204).json({ message: "Product deleted" }); // No content to send back
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: "Internal Server Error", error });
   }
 };
 
@@ -198,14 +223,11 @@ export const uploadImages = async (req: Request, res: Response) => {
       )
     );
 
-    // Fetch the product from the database
     const product = await ProductModel.findById(id);
 
     if (product) {
-      // Update product's images array with new URLs
       product.images.unshift(...urls.map((url) => url.secure_url));
 
-      // Save the updated product back to the database
       await product.save();
     }
 

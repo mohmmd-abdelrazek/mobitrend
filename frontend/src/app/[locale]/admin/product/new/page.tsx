@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import InputField from "@/src/components/InputField"; // Assuming InputField is imported correctly
+import InputField from "@/src/components/InputField"; 
 import { axiosInstance } from "@/src/services/fetcher";
 import toast from "react-hot-toast";
 import { mutate } from "swr";
@@ -27,7 +27,6 @@ const AddProductForm = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      // API endpoint should be configured as per your setup
       const response = await axiosInstance.post("/product", {
         ...productData,
         price: parseFloat(productData.price),
@@ -36,11 +35,9 @@ const AddProductForm = () => {
       mutate("/product");
       toast.success("Product added");
       console.log("Product added:", response.data);
-      // Handle further actions like clearing the form or showing a success message
     } catch (error) {
       console.error("Error adding product:", error);
       toast.error("failed adding product");
-      // Handle errors, e.g., displaying error messages
     } finally {
       setIsLoading(false);
     }
@@ -92,8 +89,9 @@ const AddProductForm = () => {
             label="Category"
             placeholder="Select a category"
             options={[
-              { value: "electronics", label: "Electronics" },
-              { value: "books", label: "Books" },
+              {value: "mobiles", label: "Mobiles"},
+              {value: "airpodes", label: "Airpodes"},
+              {value: "watches", label: "Watches"},
             ]}
           />
           <InputField

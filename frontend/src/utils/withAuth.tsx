@@ -22,7 +22,7 @@ const withAuth = <P extends WithAuthProps>(WrappedComponent: React.ComponentType
     }, [data?.isAuthenticated, isLoading, pathname, router]);
 
     if (isLoading) {
-      return <LoadingIndicator w={4} d={4} />;
+      return <div className="flex-1 flex items-center justify-center"><LoadingIndicator w={4} d={4} /></div>;
     }
 
     if (!data?.isAuthenticated) {

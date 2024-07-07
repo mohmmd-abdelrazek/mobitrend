@@ -99,10 +99,9 @@ const UpdateProductForm = () => {
             label="Category"
             placeholder="Select a category"
             options={[
-              { value: "electronics", label: "Electronics" },
-              { value: "books", label: "Books" },
-              { value: "clothing", label: "Clothing" },
-              { value: "accessories", label: "Accessories" },
+              {value: "mobiles", label: "Mobiles"},
+              {value: "airpodes", label: "Airpodes"},
+              {value: "watches", label: "Watches"},
             ]}
           />
           <InputField
