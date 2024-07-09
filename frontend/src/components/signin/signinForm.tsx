@@ -20,25 +20,25 @@ const SigninForm = (texts: SigninTextProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectPath = searchParams.get("redirect");
-
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCredentials((prev) => ({ ...prev, [name]: value }));
   };
-
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
+    
     try {
       await axiosInstance.post("/auth/login", credentials);
       setIsLoading(false);
       await mutate("/auth/status");
       mergeCart();
       mutate("/user/profile");
-      toast.success("logged in successfully");
       router.push(redirectPath ?? "/");
+      toast.success("logged in successfully");
     } catch (error) {
       setIsLoading(false);
       if (isAxiosError(error)) {

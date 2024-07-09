@@ -12,14 +12,19 @@ const withAuth = <P extends WithAuthProps>(WrappedComponent: React.ComponentType
   const Auth: React.FC<P> = (props) => {
     const router = useRouter();
     const pathname = usePathname();
-    const { data, isLoading } = useAuth();
+    const { data, isLoading, mutate } = useAuth();
 
     useEffect(() => {
-      if (!data?.isAuthenticated && !isLoading) {
-        toast.error("You need to sign in first")
-        router.push(`/signin?redirect=${pathname}`);
+      async function redirect() {
+        await mutate();
+        if (!data?.isAuthenticated && !isLoading) {
+          toast.loading("You need to sign in first", {duration:4000})
+          router.push(`/signin?redirect=${pathname}`);
+        }
       }
-    }, [data?.isAuthenticated, isLoading, pathname, router]);
+      redirect();
+      
+    }, [data?.isAuthenticated, isLoading, mutate, pathname, router]);
 
     if (isLoading) {
       return <div className="flex-1 flex items-center justify-center"><LoadingIndicator w={4} d={4} /></div>;
