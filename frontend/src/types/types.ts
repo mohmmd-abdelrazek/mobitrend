@@ -10,6 +10,7 @@ export interface Product {
   rating: number;
   numReviews: number;
   discount: number;
+  slug: string;
   variants: ProductVariant[];
   createdAt?: string;
   updatedAt?: string;

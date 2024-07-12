@@ -8,15 +8,15 @@ const router = express.Router();
 
 router.get("/", productController.getAllProducts);
 
-router.get("/:id", productController.getProductById);
+router.get("/:productSlug", productController.getProductBySlug);
 
 router.post("/", isAuthenticated, productController.createProduct);
 
-router.put("/:id", isAuthenticated, productController.updateProduct);
+router.put("/:productSlug", isAuthenticated, productController.updateProduct);
 
-router.delete("/:id", isAuthenticated, productController.deleteProduct);
+router.delete("/:productSlug", isAuthenticated, productController.deleteProduct);
 
-router.get("/:id/images", productController.getProductImages);
+router.get("/:productSlug/images", productController.getProductImages);
 
 router.delete("/images/:imageUrl", productController.deleteProductImage);
 

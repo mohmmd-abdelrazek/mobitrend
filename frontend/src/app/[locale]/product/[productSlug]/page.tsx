@@ -21,7 +21,6 @@ import { FaStar } from "react-icons/fa6";
 import { mutate } from "swr";
 
 const ProductPage = () => {
-  const { productId } = useParams();
   const {
     data: product,
     isLoading,
@@ -58,12 +57,12 @@ const ProductPage = () => {
 
   const handleAddToCart = async () => {
     if (status?.isAuthenticated) {
-      await addItemToCart(productId, quantity);
+      await addItemToCart(product._id, quantity);
       toast.success("product added to cart");
       setQuantity(0);
       mutateCart();
     } else {
-      await addItemToLocalCart(productId, quantity, products);
+      await addItemToLocalCart(product._id, quantity, products);
       toast.success("product added to cart");
       setQuantity(0);
     }
@@ -98,7 +97,7 @@ const ProductPage = () => {
             <QuantitySelector
               maxQty={
                 product?.inStock -
-                (cart?.cartItems.find((item: any) => item.product === productId)
+                (cart?.cartItems.find((item: any) => item.product === product._id)
                   ?.qty ?? 0)
               }
               minQty={0}
@@ -122,14 +121,14 @@ const ProductPage = () => {
                 Out of Stock
               </span>
             )}
-            {(cart?.cartItems.find((item: any) => item.product === productId)
+            {(cart?.cartItems.find((item: any) => item.product === product._id)
               ?.qty ?? 0) > 0 && (
               <p>
                 <span className="text-base font-medium">(Added to cart: </span>
                 <span className="text-sm font-medium">
                   {
                     cart?.cartItems.find(
-                      (item: any) => item.product === productId,
+                      (item: any) => item.product === product._id,
                     )?.qty
                   }
                 </span>
@@ -151,7 +150,7 @@ const ProductPage = () => {
             onSubmit={async (e) => {
               e.preventDefault();
               setFormLoading(true);
-              await addReview(productId, reviewData);
+              await addReview(product._id, reviewData);
               setFormLoading(false);
             }}
             className="mt-4"

@@ -12,32 +12,32 @@ export async function createProduct(productData: Product) {
 }
 
 export async function updateProduct(
-  productId: string | string[],
+  productSlug: string,
   productData: Product,
 ) {
   const response = await axiosInstance.put(
-    `/product/${productId}`,
+    `/product/${productSlug}`,
     productData,
   );
-  mutate(`/product/${productId}`);
+  mutate(`/product/${productSlug}`);
   return response.data;
 }
 
-export async function deleteProduct(productId: number) {
-  const response = await axiosInstance.delete(`/product/${productId}`);
+export async function deleteProduct(productSlug: string) {
+  const response = await axiosInstance.delete(`/product/${productSlug}`);
   toast.success("product deleted");
   return response.data;
 }
 
 export async function uploadImages(
-  productId: string | string[],
+  productSlug: string | string[],
   data: FormData,
 ) {
   const response = await axiosInstance.post(
-    `/product/${productId}/upload-images`,
+    `/product/${productSlug}/upload-images`,
     data,
   );
-  mutate(`/product/${productId}/images`);
+  mutate(`/product/${productSlug}/images`);
   toast.success("images uploaded");
   return response.data;
 }

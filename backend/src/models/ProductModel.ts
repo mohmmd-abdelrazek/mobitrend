@@ -1,4 +1,5 @@
 import { Schema, Document, Model, model } from "mongoose";
+import slugify from "slugify";
 import ReviewModel from "./ReviewModel";
 
 interface IProduct extends Document {
@@ -12,6 +13,7 @@ interface IProduct extends Document {
   rating: number; // Average rating, calculated dynamically
   numReviews: number;
   discount: number;
+  slug: string;
 }
 
 interface ProductMethods extends Model<IProduct> {
@@ -30,6 +32,7 @@ const productSchema = new Schema<IProduct>(
     rating: { type: Number, default: 0 },
     numReviews: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
+    slug: { type: String, required: true, unique: true, trim: true },
   },
   {
     timestamps: true,
@@ -49,6 +52,26 @@ productSchema.statics.updateAverageRating = async function (productId) {
     numReviews: reviews.length,
   });
 };
+
+const generateUniqueSlug = async function (name: string, id: string): Promise<string> {
+  const slug = slugify(name, { lower: true, strict: true });
+  const existingProduct = await ProductModel.findOne({ slug, _id: { $ne: id } });
+
+  if (!existingProduct) {
+    return slug;
+  }
+
+  const randomString = Math.random().toString(36).substring(7);
+  const uniqueSlug = `${slug}-${randomString}`;
+  return uniqueSlug;
+};
+
+productSchema.pre("save", async function (next) {
+  if (this.isModified("name")) {
+    this.slug = await generateUniqueSlug(this.name, this._id);
+  }
+  next();
+});
 
 productSchema.index({ name: "text", description: "text" });
 

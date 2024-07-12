@@ -92,9 +92,9 @@ export const getAllProducts = async (req: Request, res: Response) => {
   }
 };
 
-export const getProductById = async (req: Request, res: Response) => {
+export const getProductBySlug = async (req: Request, res: Response) => {
   try {
-    const product = await ProductModel.findById(req.params.id);
+    const product = await ProductModel.findOne({slug: req.params.productSlug});
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -133,9 +133,9 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const deleteProduct = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const { productSlug } = req.params;
 
-    const product = await ProductModel.findById(id);
+    const product = await ProductModel.findOne({slug: productSlug});
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
@@ -143,11 +143,11 @@ export const deleteProduct = async (req: Request, res: Response) => {
     try {
       const resources = await cloudinary.api.resources({
         type: "upload",
-        prefix: `products/${id}`,
+        prefix: `products/${productSlug}`,
       });
 
       if (resources.resources.length > 0) {
-        await cloudinary.api.delete_resources_by_prefix(`products/${id}`);
+        await cloudinary.api.delete_resources_by_prefix(`products/${productSlug}`);
       }
     } catch (error) { /* empty */ }
     
@@ -155,15 +155,15 @@ export const deleteProduct = async (req: Request, res: Response) => {
     try {
       const folderInfo = await cloudinary.api.sub_folders("products");
       const folderExists = folderInfo.folders.some(
-        (folder: { path: string }) => folder.path === `products/${id}`
+        (folder: { path: string }) => folder.path === `products/${productSlug}`
       );
 
       if (folderExists) {
-        await cloudinary.api.delete_folder(`products/${id}`);
+        await cloudinary.api.delete_folder(`products/${productSlug}`);
       }
     } catch (error) { /* empty */ }
 
-    await ProductModel.findByIdAndDelete(id);
+    await ProductModel.findOneAndDelete({slug: productSlug});
 
     res.status(204).json({ message: "Product deleted" }); // No content to send back
   } catch (error) {
@@ -189,10 +189,10 @@ export const updateStock = async (req: Request, res: Response) => {
 };
 
 export const getProductImages = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const {productSlug} = req.params;
   try {
     const result = await cloudinary.search
-      .expression(`folder:products/${id}`)
+      .expression(`folder:products/${productSlug}`)
       .sort_by("created_at", "desc")
       .max_results(30)
       .execute();
@@ -207,11 +207,11 @@ export const getProductImages = async (req: Request, res: Response) => {
 };
 
 export const uploadImages = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const {productSlug} = req.params;
   try {
     const uploader = async (file: Express.Multer.File) =>
       await cloudinary.uploader.upload(file.path, {
-        folder: `products/${id}`,
+        folder: `products/${productSlug}`,
       });
     const urls = await Promise.all(
       (req.files as Express.Multer.File[]).map((file) => uploader(file))
@@ -223,7 +223,7 @@ export const uploadImages = async (req: Request, res: Response) => {
       )
     );
 
-    const product = await ProductModel.findById(id);
+    const product = await ProductModel.findOne({slug: productSlug});
 
     if (product) {
       product.images.unshift(...urls.map((url) => url.secure_url));

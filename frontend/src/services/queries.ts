@@ -20,17 +20,17 @@ export function useProducts() {
 }
 
 export function useProduct() {
-  const { productId } = useParams();
-  return useSWRImmutable(productId ? `/product/${productId}` : null);
+  const { productSlug } = useParams();
+  return useSWRImmutable(productSlug ? `/product/${productSlug}` : null);
 }
 
 export function useProductImages() {
-  const { productId } = useParams();
-  return useSWRImmutable(productId ? `/product/${productId}/images` : null);
+  const { productSlug } = useParams();
+  return useSWRImmutable(productSlug ? `/product/${productSlug}/images` : null);
 }
 
-export function useProductImage(productId: number) {
-  return useSWRImmutable(productId ? `/product/${productId}/images` : null);
+export function useProductImage(productSlug: string) {
+  return useSWRImmutable(productSlug ? `/product/${productSlug}/images` : null);
 }
 
 export function useUsers() {
