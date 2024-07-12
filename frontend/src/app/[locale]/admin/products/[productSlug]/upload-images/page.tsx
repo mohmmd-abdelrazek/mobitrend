@@ -9,7 +9,7 @@ import { deleteImage, uploadImages } from "@/src/services/mutate";
 import { TicketX } from "lucide-react";
 
 const UploadImages = () => {
-  const { productId } = useParams();
+  const { productSlug } = useParams();
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const { data, isLoading, error, mutate } = useProductImages();
@@ -33,7 +33,7 @@ const UploadImages = () => {
       files.forEach((file) => formData.append("images", file));
       try {
         setUploading(true);
-        await uploadImages(productId, formData);
+        await uploadImages(productSlug, formData);
         mutate();
         setFiles([]);
         fileInputRef.current && (fileInputRef.current.value = "");
@@ -48,7 +48,7 @@ const UploadImages = () => {
 
   return (
     <div className="w-full px-4 py-6 shadow-lg">
-      <h1 className="mb-4 text-2xl font-bold">{`Upload Images for Product #${productId}`}</h1>
+      <h1 className="mb-4 text-2xl font-bold">{`Upload Images for Product ${productSlug}`}</h1>
       <form onSubmit={handleSubmit}>
         <input
           type="file"

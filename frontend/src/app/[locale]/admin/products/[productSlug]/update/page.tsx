@@ -10,7 +10,6 @@ import { mutate } from "swr";
 
 const UpdateProductForm = () => {
   const router = useRouter();
-  const { productId } = useParams();
   const {
     data: productData,
     isLoading,
@@ -41,7 +40,7 @@ const UpdateProductForm = () => {
         price: parseFloat(productData.price),
         inStock: parseInt(productData.inStock),
       };
-      updateProduct(productId, updatedData);
+      updateProduct(productData.slug, updatedData);
       toast.success("Product updated successfully");
       mutate("/product");
       router.push("/admin/products");
