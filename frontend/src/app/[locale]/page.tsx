@@ -1,6 +1,6 @@
 "use client";
 
-import { useProducts } from "@/src/services/queries";
+import { useFilteredProducts } from "@/src/services/queries";
 import { useSearchParams } from "next/navigation";
 import FilterSide from "@/src/components/FilterSide";
 import Pagination from "@/src/components/Pagination";
@@ -14,14 +14,16 @@ const HomePage = () => {
 
   const keyword = searchParams.get("keyword");
 
-  const { data } = useProducts();
+  const { data } = useFilteredProducts();
 
   return (
     <div className="large-container flex flex-1 flex-col gap-8 py-4">
       {/* {!keyword && <PromotionBanner />} */}
       {!keyword && (
         <div>
-          <h2 className="text-xl font-bold border-b border-gray-300">Categories</h2>
+          <h2 className="border-b border-gray-300 text-xl font-bold">
+            Categories
+          </h2>
           <Categories />
         </div>
       )}

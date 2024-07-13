@@ -6,31 +6,28 @@ import QuantitySelector from "@/src/components/QuantitySelector";
 import Rating from "@/src/components/Rating";
 import { addItemToCart, addReview } from "@/src/services/mutate";
 import {
+  useAllProducts,
   useAuth,
   useCart,
   useProduct,
-  useProducts,
   useReviews,
 } from "@/src/services/queries";
 import { Cart } from "@/src/types/types";
 import { addItemToLocalCart, getLocalCart } from "@/src/utils/indexedDb";
-import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaStar } from "react-icons/fa6";
-import { mutate } from "swr";
 
 const ProductPage = () => {
   const {
     data: product,
     isLoading,
     error,
-    mutate: mutateProduct,
   } = useProduct();
   const { data: status } = useAuth();
   const { data: reviews } = useReviews();
   const { data: remoteCart, mutate: mutateCart } = useCart();
-  const { data: productsData } = useProducts();
+  const { data: productsData } = useAllProducts();
   const products = productsData?.products;
   const [cart, setCart] = useState<Cart | null>(null);
 

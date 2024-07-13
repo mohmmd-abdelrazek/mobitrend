@@ -6,7 +6,7 @@ import cloudinary from "../config/cloudinaryConfig";
 
 const unlinkAsync = promisify(fs.unlink);
 
-export const getAllProducts = async (req: Request, res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
   interface QueryParams {
     categories?: string;
     ratings?: string;
@@ -84,6 +84,22 @@ export const getAllProducts = async (req: Request, res: Response) => {
       status: "success",
       page,
       totalPages: limit ? Math.ceil(total / limit) : 1,
+      products: products,
+      productsCount: total,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving products", error });
+  }
+};
+
+export const getAllProducts = async (req: Request, res: Response) => {
+  
+  try {
+    const products = await ProductModel.find();
+    const total = await ProductModel.countDocuments();
+
+    res.status(200).json({
+      status: "success",
       products: products,
       productsCount: total,
     });

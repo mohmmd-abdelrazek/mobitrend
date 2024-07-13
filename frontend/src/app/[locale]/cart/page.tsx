@@ -5,7 +5,7 @@ import {
   removeItemFromCart,
   updateItemInCart,
 } from "@/src/services/mutate";
-import { useAuth, useCart, useProducts } from "@/src/services/queries";
+import { useAuth, useCart, useFilteredProducts } from "@/src/services/queries";
 import {
   removeItemFromLocalCart,
   updateItemInLocalCart,
@@ -20,7 +20,7 @@ import { Cart } from "@/src/types/types";
 
 const CartPage = () => {
   const { data: remoteCart, isLoading, error, mutate } = useCart();
-  const { data: productsData } = useProducts();
+  const { data: productsData } = useFilteredProducts();
   const { data: status } = useAuth();
   const [cart, setCart] = useState<Cart | null>(null);
   const isAuthenticated = status?.isAuthenticated;

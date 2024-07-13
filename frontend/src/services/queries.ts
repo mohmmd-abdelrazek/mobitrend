@@ -14,9 +14,13 @@ export function useAuth() {
   return useSWRImmutable("/auth/status");
 }
 
-export function useProducts() {
+export function useFilteredProducts() {
   const searchParams = useSearchParams();
   return useSWRImmutable(`/product?${searchParams}`);
+}
+
+export function useAllProducts() {
+  return useSWRImmutable("/product/all");
 }
 
 export function useProduct() {
@@ -47,9 +51,7 @@ export function useAvatar() {
 
 export function useReviews() {
   const { productId } = useParams();
-  return useSWRImmutable<Review[]>(
-    productId ? `/review/${productId}` : null,
-  );
+  return useSWRImmutable<Review[]>(productId ? `/review/${productId}` : null);
 }
 
 export function useCart() {

@@ -1,13 +1,13 @@
 import { useSearchParams } from "next/navigation";
 import { usePathname, useRouter } from "../navigation";
-import { useProducts } from "../services/queries";
+import { useFilteredProducts } from "../services/queries";
 
 const Pagination = () => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const currentPage = parseInt(searchParams.get("page") as string) || 1;
-  const { data } = useProducts();
+  const { data } = useFilteredProducts();
   const pageNumbers = Array.from({ length: data?.totalPages }, (_, i) => i + 1);
 
   const onPageChange = (pageNumber: number) => {

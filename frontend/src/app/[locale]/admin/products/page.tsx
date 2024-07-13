@@ -1,5 +1,5 @@
 "use client";
-import { useProducts } from "@/src/services/queries";
+import { useFilteredProducts } from "@/src/services/queries";
 import { FaEdit, FaUpload, FaTrashAlt } from "react-icons/fa";
 import { Product } from "@/src/types/types";
 import clsx from "clsx";
@@ -9,7 +9,12 @@ import { useSearchParams } from "next/navigation";
 import Pagination from "@/src/components/Pagination";
 
 const AdminProductsPage = () => {
-  const { data, isLoading, error, mutate: mutateProducts } = useProducts();
+  const {
+    data,
+    isLoading,
+    error,
+    mutate: mutateProducts,
+  } = useFilteredProducts();
   const searchParams = useSearchParams();
 
   if (isLoading) return <p>Loading...</p>;
@@ -22,7 +27,7 @@ const AdminProductsPage = () => {
       <h1 className="my-4 text-xl font-bold sm:text-2xl">
         Number of Products: {data.productsCount}
       </h1>
-      <div className="w-full overflow-x-auto flex-1">
+      <div className="w-full flex-1 overflow-x-auto">
         <table className="min-w-full table-auto border-collapse text-left">
           <thead>
             <tr>
@@ -56,28 +61,28 @@ const AdminProductsPage = () => {
                   {product.inStock}
                 </td>
                 <td className="border border-gray-300 px-4 py-2 text-sm text-gray-900 sm:px-6 sm:py-4">
-                  <div className="flex gap-2 items-center">
-                  <Link
-                    href={`/admin/products/${product.slug}/update`}
-                    className="rounded-md border-2 border-orange-500 p-1 text-orange-500 hover:bg-orange-500 hover:text-white"
-                  >
-                    <FaEdit />
-                  </Link>
-                  <Link
-                    href={`/admin/products/${product.slug}/upload-images`}
-                    className="rounded-md border-2 border-green-500 p-1 text-green-500 hover:bg-green-500 hover:text-white"
-                  >
-                    <FaUpload />
-                  </Link>
-                  <button
-                    onClick={async () => {
-                      await deleteProduct(product.slug);
-                      mutateProducts();
-                    }}
-                    className="rounded-md border-2 border-red-500 p-1 text-red-500 hover:bg-red-500 hover:text-white"
-                  >
-                    <FaTrashAlt />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/admin/products/${product.slug}/update`}
+                      className="rounded-md border-2 border-orange-500 p-1 text-orange-500 hover:bg-orange-500 hover:text-white"
+                    >
+                      <FaEdit />
+                    </Link>
+                    <Link
+                      href={`/admin/products/${product.slug}/upload-images`}
+                      className="rounded-md border-2 border-green-500 p-1 text-green-500 hover:bg-green-500 hover:text-white"
+                    >
+                      <FaUpload />
+                    </Link>
+                    <button
+                      onClick={async () => {
+                        await deleteProduct(product.slug);
+                        mutateProducts();
+                      }}
+                      className="rounded-md border-2 border-red-500 p-1 text-red-500 hover:bg-red-500 hover:text-white"
+                    >
+                      <FaTrashAlt />
+                    </button>
                   </div>
                 </td>
               </tr>

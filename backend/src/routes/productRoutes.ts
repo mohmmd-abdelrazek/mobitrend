@@ -6,7 +6,9 @@ const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
-router.get("/", productController.getAllProducts);
+router.get("/", productController.getProducts);
+
+router.get("/all", productController.getAllProducts);
 
 router.get("/:productSlug", productController.getProductBySlug);
 
